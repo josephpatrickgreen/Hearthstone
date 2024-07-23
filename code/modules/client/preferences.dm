@@ -157,7 +157,6 @@ GLOBAL_LIST_EMPTY(chosen_names)
 	var/list/violated = list()
 	var/list/descriptor_entries = list()
 	var/defiant = TRUE
-	var/char_accent = "No accent"
 	/// Tracker to whether the person has ever spawned into the round, for purposes of applying the respawn ban
 	var/has_spawned = FALSE
 
