@@ -193,3 +193,4 @@
 		if(T)
 			T.flash_lighting_fx(30)
 #endif
+//if porting sleep advancement PR, PR 21 New Specials #712 changes here too. Delete line if added.
