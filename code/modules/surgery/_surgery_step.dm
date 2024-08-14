@@ -59,9 +59,9 @@
 	/// Modifiers to success chance when you're above the median
 	var/list/skill_bonuses = list(
 		1 = 0.4,
-		2 = 0.6,
-		3 = 0.8,
-		4 = 1,
+		2 = 0.8,
+		3 = 1,
+		4 = 1.2,
 		5 = 1.5,
 		6 = 2,
 	)
