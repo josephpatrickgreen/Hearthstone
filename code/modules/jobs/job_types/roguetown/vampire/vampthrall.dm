@@ -58,9 +58,9 @@
 	H.change_stat("strength", 1)
 	H.change_stat("speed", 2)
 	H.change_stat("intelligence", 2)
-	/*	if(H.mind)
-		var/datum/antagonist/vampire/new_antag = new /datum/antagonist/vampire/lesser()
-		H.mind.add_antag_datum(new_antag) */ // Only gives vampire tab for abilities but completely unfunctional
+	/*if(H.mind)
+		var/datum/antagonist/vampire/new_antag = new /datum/antagonist/vampirelord/lesser()
+		H.mind.add_antag_datum(new_antag) */ //Functional Vampirism
 
 	
 /obj/effect/proc_holder/spell/self/convertrole/vampire
