@@ -385,7 +385,7 @@
 	invocation_type = "shout"
 
 
-/obj/effect/proc_holder/spell/invoked/GodInvis
+/obj/effect/proc_holder/spell/invoked/Disappear
 	name = "Disappear"
 	overlay_state = "Smoke Bomb"
 	releasedrain = 0
@@ -393,22 +393,20 @@
 	chargetime = 0
 	charge_max = 0 SECONDS
 	range = 0
-	smoke_spread = 2
-	smoke_amt = 4
-	action_icon_state = "smoke"
 	warnie = "sydwarning"
 	movement_interrupt = FALSE
 	invocation = "You won't be missed."
+	invocation_type = "shout"
 	sound = 'sound/misc/area.ogg'
 	associated_skill = /datum/skill/magic/arcane
-/obj/effect/proc_holder/spell/invoked/Godinvis/cast(list/targets, mob/living/user)
+/obj/effect/proc_holder/spell/invoked/Disappear/cast(list/targets, mob/living/user)
 	if(isliving(targets[1]))
 		var/mob/living/target = targets[1]
 		if(target.anti_magic_check(TRUE, TRUE))
 			return FALSE
 		target.visible_message(span_warning("[target] loses shape, almost becoming non-existent!"), span_notice("You feel your very existence being ripped from this world!"))
-		animate(target, alpha = 10, time = 1 SECONDS, easing = EASE_IN)
+		animate(target, alpha = 60, time = 1 SECONDS, easing = EASE_IN)
 		target.mob_timers[MT_INVISIBILITY] = world.time + 20 SECONDS
 		addtimer(CALLBACK(target, TYPE_PROC_REF(/mob/living, update_sneak_invis), TRUE), 20 SECONDS)
-		addtimer(CALLBACK(target, TYPE_PROC_REF(/atom/movable, visible_message), span_warning("[target] fades back into view."), span_notice("You regain your barings once more.")), 20 SECONDS)
+		addtimer(CALLBACK(target, TYPE_PROC_REF(/atom/movable, visible_message), span_warning("[target] fades back into view."), span_notice("You regain your bearings once more.")), 20 SECONDS)
 	return FALSE

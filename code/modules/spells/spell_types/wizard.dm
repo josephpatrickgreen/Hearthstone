@@ -180,6 +180,22 @@
 /obj/effect/proc_holder/spell/aoe_turf/timestop/cast(list/targets, mob/user = usr)
 	new /obj/effect/timestop/magic(get_turf(user), timestop_range, timestop_duration, list(user))
 
+/obj/effect/proc_holder/spell/aoe_turf/timestop_greater
+	name = "Stop Time Greater"
+	desc = ""
+	charge_max = 50
+	clothes_req = FALSE
+	invocation = "The final hour!"
+	invocation_type = "shout"
+	range = 0
+	cooldown_min = 50
+	action_icon_state = "time"
+	var/timestop_range = 5
+	var/timestop_duration = 100
+
+/obj/effect/proc_holder/spell/aoe_turf/timestop_greater/cast(list/targets, mob/user = usr)
+	new /obj/effect/timestop/magic(get_turf(user), timestop_range, timestop_duration, list(user))
+
 /obj/effect/proc_holder/spell/aoe_turf/conjure/Wolf
 	name = "Summon Wolf"
 	desc = ""
@@ -248,6 +264,7 @@
 	clothes_req = FALSE
 	charge_max = 300
 	invocation = "Serve me, creatures of the night."
+	invocation_type = "shout"
 	summon_type = list(/mob/living/simple_animal/hostile/retaliate/rogue/wendigo)
 	summon_amt = 1
 
@@ -267,12 +284,12 @@
 /obj/effect/proc_holder/spell/aoe_turf/repulse
 	name = "Repulse"
 	desc = ""
-	charge_max = 400
+	charge_max = 200
 	clothes_req = FALSE
-	invocation = "GITTAH WEIGH"
+	invocation = "Begone."
 	invocation_type = "shout"
 	range = 5
-	cooldown_min = 150
+	cooldown_min = 100
 	selection_type = "view"
 	sound = 'sound/blank.ogg'
 	var/maxthrow = 5
