@@ -5035,6 +5035,7 @@
 /area/rogue/outdoors/town)
 "dkf" = (
 /obj/structure/closet/crate/chest/gold{
+	anchored = 1;
 	lockid = "blacksmith";
 	name = "lockable blacksmith chest"
 	},
@@ -10635,20 +10636,6 @@
 /obj/item/roguekey/vault,
 /turf/open/floor/rogue/tile/tilerg,
 /area/rogue/indoors/town/manor)
-"htk" = (
-/obj/structure/closet/crate/chest,
-/obj/item/rogueore/coal,
-/obj/item/rogueore/coal,
-/obj/item/rogueore/coal,
-/obj/item/rogueore/coal,
-/obj/item/rogueore/coal,
-/obj/item/rogueore/coal,
-/obj/machinery/light/rogue/wallfire/candle{
-	pixel_x = 32;
-	pixel_y = 0
-	},
-/turf/open/floor/rogue/blocks/stonered/tiny,
-/area/rogue/indoors/town/dwarfin)
 "htA" = (
 /obj/structure/bars/cemetery,
 /turf/open/floor/rogue/dirt,
@@ -28945,6 +28932,20 @@
 	},
 /turf/open/floor/rogue/cobble,
 /area/rogue/indoors/town/tavern)
+"vmw" = (
+/obj/structure/closet/crate/chest,
+/obj/item/rogueore/coal,
+/obj/item/rogueore/coal,
+/obj/item/rogueore/coal,
+/obj/item/rogueore/coal,
+/obj/item/rogueore/coal,
+/obj/item/rogueore/coal,
+/obj/machinery/light/rogue/wallfire/candle{
+	pixel_x = 32;
+	pixel_y = 0
+	},
+/turf/open/floor/rogue/blocks/stonered/tiny,
+/area/rogue/indoors/town/dwarfin)
 "vmJ" = (
 /obj/item/rogueweapon/shovel,
 /turf/open/floor/rogue/dirt,
@@ -309573,7 +309574,7 @@ wKT
 fWX
 ska
 umy
-htk
+vmw
 dxz
 wCp
 wCp
