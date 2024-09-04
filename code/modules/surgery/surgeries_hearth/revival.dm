@@ -38,7 +38,8 @@
 		display_results(user, target, span_notice("You cannot infuse life into the undead! The rot must be cured first."),
 		"[user] works the lux into [target]'s innards.",
 		"[user] works the lux into [target]'s innards.")
-		return FALSE 
+		return FALSE
+	target.adjustOxyLoss(-target.getOxyLoss()) //Ye Olde CPR
 	display_results(user, target, span_notice("You succeed in restarting [target]'s hearth with the infusion of lux."),
 		"[user] works the lux into [target]'s innards.",
 		"[user] works the lux into [target]'s innards.")
