@@ -157,6 +157,7 @@ GLOBAL_LIST_EMPTY(chosen_names)
 	var/list/violated = list()
 	var/list/descriptor_entries = list()
 	var/defiant = TRUE
+	var/char_accent = "No accent"
 	/// Tracker to whether the person has ever spawned into the round, for purposes of applying the respawn ban
 	var/has_spawned = FALSE
 
@@ -1692,11 +1693,9 @@ Slots: [job.spawn_positions]</span>
 							to_chat(user, span_info("[charflaw.desc]"))
 
 				if("char_accent")
-					var/selectedaccent
-					selectedaccent = input(user, "Choose your character's accent:", "Character Preference") as null|anything in GLOB.character_accents
+					var/selectedaccent = input(user, "Choose your character's accent:", "Character Preference") as null|anything in GLOB.character_accents
 					if(selectedaccent)
-						char_accent = GLOB.character_accents[selectedaccent]
-						char_accent = new char_accent()
+						char_accent = selectedaccent
 
 				if("ooccolor")
 					var/new_ooccolor = input(user, "Choose your OOC colour:", "Game Preference",ooccolor) as color|null
