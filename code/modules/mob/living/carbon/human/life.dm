@@ -52,7 +52,8 @@
 					if(has_status_effect(/datum/status_effect/debuff/sleepytime))
 						tiredness = 0
 						remove_status_effect(/datum/status_effect/debuff/sleepytime)
-						if(!mind.antag_datums || !mind.antag_datums.len)
+						if(mind)
+							if(!mind.antag_datums || !mind.antag_datums.len)
 								allmig_reward++
 								to_chat(src, span_danger("Nights Survived: \Roman[allmig_reward]"))
 								var/datum/game_mode/chaosmode/C = SSticker.mode
