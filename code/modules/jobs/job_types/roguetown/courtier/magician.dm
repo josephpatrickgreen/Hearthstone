@@ -57,7 +57,7 @@
 		H.change_stat("strength", -1)
 		H.change_stat("constitution", -1)
 		H.change_stat("intelligence", 4)
-		H.mind.adjust_spellpoints(3)	
+		H.mind.adjust_spellpoints(3)
 	if(H.age == AGE_OLD)
 		if(H.mind)
 			H.change_stat("speed", -1)
