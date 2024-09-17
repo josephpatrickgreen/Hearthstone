@@ -18742,6 +18742,16 @@
 /area/rogue/indoors)
 "nda" = (
 /obj/structure/rack/rogue,
+/obj/item/storage/keyring,
+/obj/item/storage/keyring,
+/obj/item/storage/keyring,
+/obj/item/storage/keyring,
+/obj/item/storage/keyring,
+/obj/item/storage/keyring,
+/obj/item/storage/keyring,
+/obj/item/storage/keyring,
+/obj/item/storage/keyring,
+/obj/item/storage/keyring,
 /turf/open/floor/rogue/cobble,
 /area/rogue/under/town/basement)
 "ndj" = (
@@ -19321,6 +19331,9 @@
 	icon_state = "tablewood1"
 	},
 /obj/item/roguekey/walls,
+/obj/item/storage/keyring,
+/obj/item/storage/keyring,
+/obj/item/storage/keyring,
 /turf/open/floor/rogue/blocks,
 /area/rogue/indoors/town/garrison)
 "nyC" = (
@@ -20961,6 +20974,9 @@
 	},
 /obj/item/roguekey/garrison,
 /obj/item/roguekey/garrison,
+/obj/item/storage/keyring,
+/obj/item/storage/keyring,
+/obj/item/storage/keyring,
 /turf/open/floor/rogue/blocks,
 /area/rogue/indoors/town/garrison)
 "oDY" = (
@@ -23270,6 +23286,7 @@
 /area/rogue/indoors/town)
 "qee" = (
 /obj/structure/mineral_door/wood/fancywood{
+	locked = 1;
 	lockid = "nobleguest"
 	},
 /turf/open/floor/rogue/dirt/road,
@@ -23368,6 +23385,7 @@
 /area/rogue/indoors/town/manor)
 "qhC" = (
 /obj/structure/mineral_door/wood/fancywood{
+	locked = 1;
 	lockid = "nobleguest"
 	},
 /turf/open/floor/rogue/cobble,
