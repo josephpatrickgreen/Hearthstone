@@ -9356,7 +9356,6 @@
 "giR" = (
 /obj/structure/table/wood,
 /obj/item/roguekey/dungeon,
-/obj/item/keyring,
 /obj/item/roguekey/garrison,
 /obj/item/reagent_containers/glass/cup/skull,
 /turf/open/floor/rogue/concrete,
@@ -13546,27 +13545,6 @@
 	},
 /turf/open/floor/rogue/carpet/lord/right,
 /area/rogue/indoors/town/manor)
-"jdK" = (
-/obj/item/keyring,
-/obj/item/keyring,
-/obj/item/keyring,
-/obj/item/keyring,
-/obj/item/keyring,
-/obj/item/keyring,
-/obj/item/keyring,
-/obj/item/keyring,
-/obj/item/keyring,
-/obj/item/keyring,
-/obj/item/keyring,
-/obj/item/keyring,
-/obj/item/keyring,
-/obj/item/keyring,
-/obj/item/keyring,
-/obj/item/keyring,
-/obj/item/keyring,
-/obj/structure/closet/crate/chest,
-/turf/open/floor/rogue/ruinedwood/spiral,
-/area/rogue/indoors)
 "jdW" = (
 /obj/structure/table/wood{
 	dir = 10;
@@ -18764,11 +18742,6 @@
 /area/rogue/indoors)
 "nda" = (
 /obj/structure/rack/rogue,
-/obj/item/keyring,
-/obj/item/keyring,
-/obj/item/keyring,
-/obj/item/keyring,
-/obj/item/keyring,
 /turf/open/floor/rogue/cobble,
 /area/rogue/under/town/basement)
 "ndj" = (
@@ -19348,8 +19321,6 @@
 	icon_state = "tablewood1"
 	},
 /obj/item/roguekey/walls,
-/obj/item/keyring,
-/obj/item/keyring,
 /turf/open/floor/rogue/blocks,
 /area/rogue/indoors/town/garrison)
 "nyC" = (
@@ -20990,7 +20961,6 @@
 	},
 /obj/item/roguekey/garrison,
 /obj/item/roguekey/garrison,
-/obj/item/keyring,
 /turf/open/floor/rogue/blocks,
 /area/rogue/indoors/town/garrison)
 "oDY" = (
@@ -25058,8 +25028,6 @@
 /turf/open/floor/rogue/concrete,
 /area/rogue/indoors/town/garrison)
 "rpv" = (
-/obj/item/keyring/vtavern,
-/obj/item/keyring/vtavern,
 /obj/item/roguekey/blacksmith/town,
 /obj/item/roguekey/blacksmith/town,
 /obj/item/roguekey/blacksmith/town,
@@ -29263,7 +29231,6 @@
 /area/rogue/indoors/town)
 "uuy" = (
 /obj/structure/table/wood,
-/obj/item/keyring,
 /obj/structure/fluff/railing/wood{
 	dir = 1;
 	layer = 2.7;
@@ -30417,8 +30384,6 @@
 	locked = 1;
 	lockid = "velder"
 	},
-/obj/item/keyring/vtavern,
-/obj/item/keyring/vtavern,
 /obj/item/roguekey/blacksmith/town,
 /obj/item/roguekey/blacksmith/town,
 /obj/item/roguekey/blacksmith/town,
@@ -32572,7 +32537,6 @@
 /obj/structure/closet/crate/roguecloset,
 /obj/item/roguekey/dungeon,
 /obj/item/roguekey/walls,
-/obj/item/keyring,
 /obj/item/roguekey/manor,
 /obj/item/storage/backpack/rogue/satchel,
 /turf/open/floor/carpet/royalblack,
@@ -33276,7 +33240,6 @@
 /obj/structure/table/wood{
 	icon_state = "tablewood1"
 	},
-/obj/item/keyring,
 /obj/item/roguekey/shop,
 /turf/open/floor/rogue/wood,
 /area/rogue/indoors/town/shop)
@@ -34396,6 +34359,12 @@
 	name = "reception room lever";
 	pixel_y = -6;
 	redstone_id = "stewardshutterout"
+	},
+/obj/structure/lever/wall{
+	dir = 4;
+	name = "reception desk shutter";
+	pixel_y = 6;
+	redstone_id = "stewardshutter"
 	},
 /turf/open/floor/rogue/hexstone,
 /area/rogue/indoors/town/manor)
@@ -315923,7 +315892,7 @@ lVe
 iLh
 xou
 xou
-jdK
+xbu
 jNG
 jQu
 lVe
