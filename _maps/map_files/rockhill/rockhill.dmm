@@ -10014,6 +10014,7 @@
 	pixel_y = 18
 	},
 /obj/item/paper/scroll,
+/obj/item/flashlight/flare/torch/lantern,
 /turf/open/floor/rogue/dirt/road,
 /area/rogue/under/cavewet/bogcaves)
 "gIw" = (
@@ -12927,6 +12928,10 @@
 	icon_state = "bluestone"
 	},
 /area/rogue/under/town/basement)
+"iIW" = (
+/mob/living/simple_animal/hostile/rogue/ghost/wraith,
+/turf/open/floor/rogue/dirt/road,
+/area/rogue/under/cavewet/bogcaves)
 "iJC" = (
 /turf/closed/wall/mineral/rogue/wooddark,
 /area/rogue/indoors/town/garrison)
@@ -13545,6 +13550,11 @@
 	},
 /turf/open/floor/rogue/carpet/lord/right,
 /area/rogue/indoors/town/manor)
+"jdK" = (
+/obj/item/flashlight/flare/torch/lantern,
+/obj/item/flashlight/flare/torch/lantern,
+/turf/open/floor/rogue/dirt/road,
+/area/rogue/under/cavewet/bogcaves)
 "jdW" = (
 /obj/structure/table/wood{
 	dir = 10;
@@ -16755,6 +16765,10 @@
 /obj/structure/closet/crate/chest,
 /obj/item/clothing/suit/roguetown/armor/plate/full/bikini,
 /obj/item/rogueweapon/sword/rapier/lord,
+/obj/item/reagent_containers/glass/bottle/rogue/healthpot,
+/obj/item/reagent_containers/glass/bottle/rogue/healthpot,
+/obj/item/reagent_containers/glass/bottle/rogue/healthpot,
+/obj/item/clothing/under/roguetown/chainlegs,
 /turf/open/floor/rogue/dirt/road,
 /area/rogue/under/cavewet/bogcaves)
 "lzg" = (
@@ -16940,7 +16954,7 @@
 /turf/open/floor/rogue/cobblerock,
 /area/rogue/outdoors/bog)
 "lEY" = (
-/mob/living/simple_animal/hostile/illusion,
+/mob/living/simple_animal/hostile/rogue/ghost/wraith/wraith2,
 /turf/open/floor/rogue/dirt/road,
 /area/rogue/under/cavewet/bogcaves)
 "lFd" = (
@@ -17090,6 +17104,16 @@
 	},
 /turf/open/floor/rogue/concrete,
 /area/rogue/under/cavewet/bogcaves/sunkencity)
+"lKl" = (
+/obj/structure/rack/rogue{
+	density = 0;
+	pixel_y = 18
+	},
+/obj/item/reagent_containers/glass/bottle/rogue/healthpot,
+/obj/item/reagent_containers/glass/bottle/rogue/healthpot,
+/obj/item/flashlight/flare/torch/lantern,
+/turf/open/floor/rogue/dirt/road,
+/area/rogue/under/cavewet/bogcaves)
 "lKO" = (
 /obj/structure/fluff/statue/why,
 /turf/open/floor/rogue/blocks/stonered,
@@ -26538,6 +26562,7 @@
 /obj/item/clothing/suit/roguetown/armor/plate/half,
 /obj/item/clothing/under/roguetown/chainlegs/skirt,
 /obj/item/reagent_containers/glass/bottle/rogue/healthpot,
+/obj/item/clothing/under/roguetown/chainlegs,
 /turf/open/floor/rogue/dirt/road,
 /area/rogue/under/cavewet/bogcaves)
 "squ" = (
@@ -28624,6 +28649,8 @@
 "tUT" = (
 /obj/structure/closet/crate/chest,
 /obj/item/roguecoin/copper/pile,
+/obj/item/wisp_lantern,
+/obj/item/reagent_containers/glass/bottle/rogue/healthpot,
 /turf/open/floor/rogue/dirt/road,
 /area/rogue/under/cavewet/bogcaves)
 "tVd" = (
@@ -30556,11 +30583,7 @@
 /turf/open/water/cleanshallow,
 /area/rogue/outdoors/rtfield)
 "voi" = (
-/obj/structure/rack/rogue{
-	density = 0;
-	pixel_y = 18
-	},
-/obj/item/reagent_containers/glass/bottle/rogue/healthpot,
+/mob/living/simple_animal/hostile/rogue/ghost/wraith/wraith3,
 /turf/open/floor/rogue/dirt/road,
 /area/rogue/under/cavewet/bogcaves)
 "vox" = (
@@ -32101,6 +32124,11 @@
 	icon_state = "linoleum"
 	},
 /area/rogue/indoors/town/church/chapel)
+"wyD" = (
+/obj/item/natural/stone,
+/obj/item/flashlight/flare/torch/lantern,
+/turf/open/floor/rogue/dirt/road,
+/area/rogue/under/cavewet/bogcaves)
 "wyY" = (
 /obj/structure/closet/crate/chest,
 /obj/item/rogueore/coal,
@@ -53121,7 +53149,7 @@ cSl
 cSl
 cSl
 hkS
-iSb
+jdK
 kGo
 hGf
 whb
@@ -59556,7 +59584,7 @@ hGf
 iSb
 aam
 hGf
-bAw
+lKl
 iSb
 iSb
 iSb
@@ -62773,7 +62801,7 @@ hGf
 iSb
 hGf
 hGf
-voi
+bAw
 iSb
 afN
 cSl
@@ -67192,8 +67220,8 @@ hGf
 hGf
 lEY
 iSb
+voi
 lEY
-iSb
 hGf
 whb
 whb
@@ -67224,7 +67252,7 @@ iSb
 iSb
 mxx
 iSb
-muz
+wyD
 sqp
 qGP
 whb
@@ -67593,7 +67621,7 @@ iHz
 iSb
 kCX
 iSb
-lEY
+voi
 iSb
 iSb
 hGf
@@ -67996,7 +68024,7 @@ hGf
 hGf
 iSb
 iSb
-lEY
+iIW
 tUT
 hGf
 whb
@@ -68397,8 +68425,8 @@ whb
 whb
 hGf
 iSb
-lEY
-lEY
+iIW
+voi
 iSb
 hGf
 whb
@@ -68801,7 +68829,7 @@ hGf
 lEY
 iSb
 iSb
-iSb
+iIW
 hGf
 whb
 whb
