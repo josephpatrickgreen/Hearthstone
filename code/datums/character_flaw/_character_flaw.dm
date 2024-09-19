@@ -269,6 +269,11 @@ GLOBAL_LIST_INIT(character_flaws, list("Alcoholic"=/datum/charflaw/addiction/alc
 	..()
 	if(!ishuman(user))
 		return
+	var/mob/living/carbon/human/H = user
+	if(!H.wear_mask)
+		H.equip_to_slot_or_del(new /obj/item/clothing/mask/rogue/lepermask(H), SLOT_WEAR_MASK)
+ H.apply_status_effect(STATUS_EFFECT_SPASMS)
+ H.apply_status_effect(STATUS_EFFECT_FAKE_VIRUS)
 /datum/charflaw/noeyel/apply_post_equipment(mob/user)
 	..()
 	if(!ishuman(user))
@@ -277,9 +282,3 @@ GLOBAL_LIST_INIT(character_flaws, list("Alcoholic"=/datum/charflaw/addiction/alc
 	var/obj/item/eyepatch = new /obj/item/clothing/mask/rogue/eyepatch/left(get_turf(H))
 	H.put_in_hands(eyepatch, forced = TRUE)
 	H.equip_to_slot_if_possible(eyepatch, SLOT_WEAR_MASK, FALSE, TRUE, FALSE, TRUE, TRUE)
-
-	var/mob/living/carbon/human/H = user
-	if(!H.wear_mask)
-		H.equip_to_slot_or_del(new /obj/item/clothing/mask/rogue/lepermask(H), SLOT_WEAR_MASK)
- H.apply_status_effect(STATUS_EFFECT_SPASMS)
- H.apply_status_effect(STATUS_EFFECT_FAKE_VIRUS)
