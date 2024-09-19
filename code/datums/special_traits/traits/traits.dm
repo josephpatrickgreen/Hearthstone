@@ -180,7 +180,7 @@
 	character.update_transform()
 
 /datum/special_trait/atheism
-	name = "Godless"
+	name = "Faithless"
 	greet_text = span_notice("Gods may exist, but know what? I care not.")
 	req_text = "Non-Church Role"
 	restricted_jobs = list(CHURCH_ROLES)
