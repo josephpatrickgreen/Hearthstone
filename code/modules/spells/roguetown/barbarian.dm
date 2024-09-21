@@ -37,8 +37,10 @@
 
 /datum/status_effect/buff/barbarian_rage/on_remove()
 	owner.adjustStaminaLoss(100)
+	owner.apply_status_effect(/datum/status_effect/buff/trainsleep)
 	. = ..()
 
 /datum/stressevent/barbarian_rage
 	timer = 5 MINUTES
 	stressadd = 6
+	max_stacks = 10 //don't rage spam or you WILL have a heart attack
