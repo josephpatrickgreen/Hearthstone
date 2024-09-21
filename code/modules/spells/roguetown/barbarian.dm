@@ -37,7 +37,7 @@
 
 /datum/status_effect/buff/barbarian_rage/on_remove()
 	owner.adjustStaminaLoss(100)
-	owner.apply_status_effect(/datum/status_effect/buff/trainsleep)
+	owner.apply_status_effect(/datum/status_effect/debuff/trainsleep)
 	. = ..()
 
 /datum/stressevent/barbarian_rage
