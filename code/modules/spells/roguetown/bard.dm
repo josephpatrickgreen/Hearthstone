@@ -362,3 +362,43 @@ function bard_insult_noun()
 		"zombie-fodder"
 		)
 	return bard_insult_noun.GetRandom()
+
+/datum/status_effect/buff/egomangled
+	id = "egomangled"
+	alert_type = /atom/movable/screen/alert/status_effect/buff/egomangled
+	effectedstats = list("fortune" = -5)
+	duration = 30 SECONDS
+
+/datum/status_effect/buff/egomangled/on_apply()
+	. = ..()
+	owner.add_stress(/datum/stressevent/egomangled)
+	if(owner?.client)
+		if(owner.client.screen && owner.client.screen.len)
+			var/atom/movable/screen/plane_master/game_world/PM = locate(/atom/movable/screen/plane_master/game_world) in owner.client.screen
+			PM.backdrop(owner)
+			PM = locate(/atom/movable/screen/plane_master/game_world_fov_hidden) in owner.client.screen
+			PM.backdrop(owner)
+			PM = locate(/atom/movable/screen/plane_master/game_world_above) in owner.client.screen
+			PM.backdrop(owner)
+
+/datum/status_effect/buff/egomangled/on_remove()
+	owner.remove_stress(/datum/stressevent/egomangled)
+	if(owner?.client)
+		if(owner.client.screen && owner.client.screen.len)
+			var/atom/movable/screen/plane_master/game_world/PM = locate(/atom/movable/screen/plane_master/game_world) in owner.client.screen
+			PM.backdrop(owner)
+			PM = locate(/atom/movable/screen/plane_master/game_world_fov_hidden) in owner.client.screen
+			PM.backdrop(owner)
+			PM = locate(/atom/movable/screen/plane_master/game_world_above) in owner.client.screen
+			PM.backdrop(owner)
+
+	. = ..()
+
+/atom/movable/screen/alert/status_effect/buff/egomangled
+	name = "Mangled Ego"
+	desc = ""
+	icon_state = "acid"
+
+/datum/stressevent/egomangled
+	timer = 3 MINUTES
+	stressadd = 5
