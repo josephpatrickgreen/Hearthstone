@@ -1,6 +1,4 @@
 // Bard spells/abilities
-//commit properly
-
 // A bard's bread and butter. Maybe jester too?
 /obj/effect/proc_holder/spell/invoked/mockery
 	name = "Viscious Mockery"

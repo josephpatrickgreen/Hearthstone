@@ -1,5 +1,4 @@
 // Barbarian
-//commit properly
 /obj/effect/proc_holder/spell/invoked/barbarian_rage
 	name = "Rage"
 	desc = "Fly into a rage increasing your physical stats."
