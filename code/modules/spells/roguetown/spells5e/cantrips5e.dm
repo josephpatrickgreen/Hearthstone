@@ -8,8 +8,27 @@
 // Ham-Hole's notes: When I was thinking about an ultimate magic update. I would have non-cantrip spells be refunded on sleep.
 // in DND a wizard must prepare his spells each day. I would also attempt to bring a per-day/per-sleep limit to spells that are of higher level.
 // With that in mind, since these spells are ones which are permanently attached to your character (in my head-code)
-// these are the ones that don't provide you experience as higher level magic should. These are also meant to damage/utility scale with arcane knowledge.
+// these are the ones that don't provide you experience as higher level magic should. These are also meant to damage/utility scale with arcane skill later.
 // Please enjoy.
+
+//Special Thanks:
+// apple tree
+// Moribun
+// Vivi
+// The peasants of hearthstone
+
+// TO DO:
+// begin playtest
+// balance damage
+// balance cooldowns
+// balance stamina loss from spell
+// make learnable
+// end playtest
+// improve visuals at leisure
+// improve dictation at leisure
+// improve sound at leisure
+// improve lore at leisure
+// improve utility eg. maybe acid splash can skeletonize a limb if casted by a high level mage
 
 //==============================================
 //	ACID SPLASH
@@ -66,7 +85,7 @@
 	playsound(src, 'sound/misc/nutriment.ogg', 100)
 	
 	for(var/mob/living/L in range(aoe_range, get_turf(src))) //apply damage over time to mobs
-		if(L.stat != DEAD && !L.anti_magic_check())
+		if(!L.anti_magic_check())
 			var/mob/living/carbon/M = L
 			M.apply_status_effect(/datum/status_effect/buff/acidsplash5e)
 			new /obj/effect/temp_visual/acidsplash5e(get_turf(M))
@@ -147,14 +166,23 @@
 	alert_type = /atom/movable/screen/alert/status_effect/buff/bladeward5e
 	effectedstats = list("constitution" = 2)
 	duration = 20 SECONDS
+	var/static/mutable_appearance/ward = mutable_appearance('icons/effects/beam.dmi', "purple_lightning", -MUTATIONS_LAYER)
 
 /atom/movable/screen/alert/status_effect/buff/bladeward5e
 	name = "Blade Ward"
 	desc = "I am resistant to damage."
 	icon_state = "buff"
 
+/datum/status_effect/buff/bladeward5e/on_apply()
+	. = ..()
+	var/mob/living/target = owner
+	target.add_overlay(ward)
+	target.update_vision_cone()
+
 /datum/status_effect/buff/bladeward5e/on_remove()
 	var/mob/living/target = owner
+	target.cut_overlay(ward)
+	target.update_vision_cone()
 	REMOVE_TRAIT(target, TRAIT_BREADY, TRAIT_GENERIC)
 	. = ..()
 
@@ -201,11 +229,6 @@
 	var/turf/start_pos
 	var/static/mutable_appearance/glow = mutable_appearance('icons/effects/effects.dmi', "empdisable", -MUTATIONS_LAYER)
 
-/atom/movable/screen/alert/status_effect/buff/boomingblade5e
-	name = "Booming Blade"
-	desc = "I feel if I move I am in serious trouble."
-	icon_state = "debuff"
-
 /datum/status_effect/buff/boomingblade5e/on_apply()
 	. = ..()
 	var/mob/living/target = owner
@@ -219,14 +242,6 @@
 	target.update_vision_cone()
 	. = ..()
 
-/datum/status_effect/buff/boomingblade5e/proc/boom()
-	var/exp_heavy = 0
-	var/exp_light = 1
-	var/exp_flash = 1
-	var/exp_fire = 0
-	explosion(owner, -1, exp_heavy, exp_light, exp_flash, 0, flame_range = exp_fire)
-	to_chat(owner, "<span class='warning'>Booming blade activates!</span>")
-
 /datum/status_effect/buff/boomingblade5e/tick()
 	var/turf/new_pos = get_turf(owner)
 	var/startX = start_pos.x
@@ -239,13 +254,26 @@
 			boom()
 		Destroy(src)
 
+/datum/status_effect/buff/boomingblade5e/proc/boom()
+	var/exp_heavy = 0
+	var/exp_light = 0
+	var/exp_flash = 2
+	var/exp_fire = 0
+	var/damage = 30
+	explosion(owner, -1, exp_heavy, exp_light, exp_flash, 0, flame_range = exp_fire)
+	owner.adjustBruteLoss(damage)
+	owner.visible_message(span_warning("A thunderous boom eminates from [owner]!"), span_danger("A thunderous boom eminates from you!"))
 
+/atom/movable/screen/alert/status_effect/buff/boomingblade5e
+	name = "Booming Blade"
+	desc = "I feel if I move I am in serious trouble."
+	icon_state = "debuff"
 
 //==============================================
 //	CHILL TOUCH
 //==============================================
 // Notes: I have taken creative liberties because I don't want to fuck with people's ability to be healed.
-// this now attaches a ghost hand to a targeted body part and does different things depending on the part
+// This now attaches a ghost hand to a targeted body part and does different things depending on the part
 /obj/effect/proc_holder/spell/invoked/chilltouch5e
 	name = "Chill Touch"
 	overlay_state = "null"
@@ -283,7 +311,7 @@
 		hand.forceMove(target)
 		bodypart.add_embedded_object(hand, silent = TRUE, crit_message = FALSE)
 		if(user.zone_selected == BODY_ZONE_CHEST)
-			var/choice = alert(target, "A skeletal hand attempts to grapple your nether region!", "", "Accept it!", "Fight it!")
+			var/choice = alert(target, "A skeletal hand attempts to grapple your private parts!", "", "Accept it!", "Fight it!")
 			switch(choice)
 			//IF YOU CHOOSE Accept it! - YOU RECIEVE PLEASURE
 				if("Accept it!")
@@ -294,7 +322,7 @@
 
 /obj/item/chilltouch5e
 	name = "Skeletal Hand"
-	desc = "A ghostly, skeletal hand which moves on of it's own accord."
+	desc = "A ghostly, skeletal hand which moves of it's own accord."
 	icon = 'icons/obj/projectiles.dmi'
 	icon_state = "bounty"
 	
@@ -306,13 +334,13 @@
 	var/oxy_drain = 2
 	var/pleasure = 1
 	var/curprocs = 0
-	var/procsmax = 50
+	var/procsmax = 360
 	var/pleasureaccepted = FALSE
 	var/mob/living/host //who are we stuck to?
 	var/obj/item/bodypart/bodypart //where are we stuck to?
 
 	embedding = list(
-		"embedded_unsafe_removal_time" = 20,
+		"embedded_unsafe_removal_time" = 50,
 		"embedded_pain_chance" = 0,
 		"embedded_pain_multiplier" = 0,
 		"embed_chance" = 100,
@@ -349,21 +377,21 @@
 			if(BODY_ZONE_HEAD) //choke
 				to_chat(host, "<span class='warning'>[host] chokes!</span>")
 				playsound(get_turf(host), pick('sound/combat/shove.ogg'), 100, FALSE, -1)
-				playsound(get_turf(host), pick('sound/vo/throat.ogg','sound/vo/throat2.ogg','sound/vo/throat3.ogg'), 100, FALSE, -1)
+				host.emote("choke")
 
 				target.adjustOxyLoss(oxy_drain*mult*2)
 			if(BODY_ZONE_CHEST) //pleasure if erp, hurt if not
 				//if erp allowed & said yes to prompt pleasure them & combat mode OFF
-				if(target.client.prefs.sexable == TRUE && pleasureaccepted)
-					to_chat(host, "<span class='warning'>[host] feels otherworld pleasure!</span>")
+				if(target.client.prefs.sexable == TRUE && pleasureaccepted && !target.cmode)
+					to_chat(host, "<span class='warning'>[host] is rubbed by a skeletal hand!</span>")
 					playsound(get_turf(host), pick('sound/misc/mat/insert (1).ogg','sound/misc/mat/insert (2).ogg'), 100, FALSE, -1)
 					target.sexcon.perform_sex_action(host, pleasure*mult*3, 0, TRUE)
 				else //damage
-					to_chat(host, "<span class='warning'>[host] is pummeled!</span>")
+					to_chat(host, "<span class='danger'>[host] is pummeled!</span>")
 					playsound(get_turf(host), pick('sound/combat/hits/punch/punch_hard (1).ogg','sound/combat/hits/punch/punch_hard (2).ogg','sound/combat/hits/punch/punch_hard (3).ogg'), 100, FALSE, -1)
 					target.adjustBruteLoss(oxy_drain*mult*3)
 			else
-				to_chat(host, "<span class='warning'>[host]'s [bodypart] is twisted!</span>")
+				to_chat(host, "<span class='danger'>[host]'s [bodypart] is twisted!</span>")
 				playsound(get_turf(host), pick('sound/combat/hits/punch/punch (1).ogg','sound/combat/hits/punch/punch (2).ogg','sound/combat/hits/punch/punch (3).ogg'), 100, FALSE, -1)
 				target.apply_damage(oxy_drain*mult*3, BRUTE, bodypart)
 				bodypart.update_disabled()
@@ -372,17 +400,102 @@
 //==============================================
 //	CONTROL FLAMES
 //==============================================
-//lame. skip
+//lame. skip. merge it with on/off
 
 //==============================================
 //	CREATE BONFIRE
 //==============================================
-//lame. skip
+//Conjure temporary campfire, why not?
+/obj/effect/proc_holder/spell/aoe_turf/conjure/createbonfire5e
+	name = "Create Bonfire"
+	desc = ""
+	clothes_req = FALSE
+	range = 0
+	overlay_state = "null"
+	sound = list('sound/magic/whiteflame.ogg')
+	active = FALSE
+
+	releasedrain = 30
+	chargedrain = 1
+	chargetime = 3
+	charge_max = 3 SECONDS //cooldown
+
+	warnie = "spellwarning"
+	no_early_release = TRUE
+	movement_interrupt = FALSE
+	antimagic_allowed = FALSE //can you use it if you are antimagicked?
+	charging_slowdown = 3
+	chargedloop = /datum/looping_sound/invokegen
+	associated_skill = /datum/skill/magic/arcane //can be arcane, druidic, blood, holy
+	cost = 1
+
+	xp_gain = FALSE
+	miracle = FALSE
+
+	invocation = ""
+	invocation_type = "shout" //can be none, whisper, emote and shout
+
+	summon_type = list(
+		/obj/machinery/light/rogue/createbonfire5e
+	)
+	summon_lifespan = 600
+	summon_amt = 1
+
+	action_icon_state = "the_traps"
+
+/obj/effect/proc_holder/spell/aoe_turf/conjure/the_traps/post_summon(obj/structure/trap/T, mob/user)
+	T.immune_minds += user.mind
+	T.charges = 1
+
+/obj/machinery/light/rogue/createbonfire5e
+	name = "magical bonfire"
+	icon_state = "churchfire1"
+	base_state = "churchfire"
+	density = FALSE
+	layer = 2.8
+	brightness = 7
+	fueluse = 10 MINUTES
+	color = "#6ab2ee"
+	bulb_colour = "#6ab2ee"
+	cookonme = TRUE
+	can_damage = TRUE
+	max_integrity = 30
+
+/obj/machinery/light/rogue/createbonfire5e/process()
+	..()
+	if(isopenturf(loc))
+		var/turf/open/O = loc
+		if(IS_WET_OPEN_TURF(O))
+			extinguish()
+
+/obj/machinery/light/rogue/createbonfire5e/onkick(mob/user)
+	if(isliving(user) && on)
+		var/mob/living/L = user
+		L.visible_message(span_info("[L] snuffs [src]."))
+		burn_out()
+
+/obj/machinery/light/rogue/createbonfire5e/attack_hand(mob/user)
+	. = ..()
+	if(.)
+		return
+
+	if(on)
+		var/mob/living/carbon/human/H = user
+
+		if(istype(H))
+			H.visible_message(span_info("[H] warms \his hand near the fire."))
+
+			if(do_after(H, 100, target = src))
+				var/obj/item/bodypart/affecting = H.get_bodypart("[(user.active_hand_index % 2 == 0) ? "r" : "l" ]_arm")
+				to_chat(H, span_warning("HOT!"))
+				if(affecting && affecting.receive_damage( 0, 5 ))		// 5 burn damage
+					H.update_damage_overlays()
+		return TRUE //fires that are on always have this interaction with lmb unless its a torch
 
 //==============================================
 //	DANCING LIGHTS
 //==============================================
-//lame. skip
+//lame. skip maybe add later for a dance party or something
 
 //==============================================
 //	DECOMPOSE
@@ -458,13 +571,13 @@
 //==============================================
 //	ELDRITCH BLAST
 //==============================================
-// Notes: You hurl a bubble of acid, a slow moving bubble projectile that deals light burn damage in an aoe
+// Notes: 
 /obj/effect/proc_holder/spell/invoked/projectile/eldritchblast5e
 	name = "Eldritch Blast"
 	desc = ""
 	clothes_req = FALSE
 	range = 8
-	projectile_type = /obj/projectile/magic/aoe/fireball/eldritchblast5e
+	projectile_type = /obj/projectile/magic/eldritchblast5e
 	overlay_state = "force_dart"
 	sound = list('sound/magic/whiteflame.ogg')
 	active = FALSE
@@ -489,26 +602,70 @@
 	invocation = ""
 	invocation_type = "shout" //can be none, whisper, emote and shout
 
-/obj/projectile/magic/aoe/fireball/eldritchblast5e
+
+/obj/projectile/magic/eldritchblast5e
 	name = "eldritch blast"
 	icon = 'icons/obj/projectiles.dmi'
 	icon_state = "arcane_barrage"
-	speed = 0.3
-	exp_heavy = 0
-	exp_light = 0
-	exp_flash = 0
-	exp_fire = -1
-	damage = 10
+	damage = 20
 	damage_type = BRUTE
-	nodamage = FALSE
 	flag = "magic"
-	hitsound = 'sound/blank.ogg'
-	aoe_range = 1
+	range = 15
+
+/obj/projectile/magic/eldritchblast5e/on_hit(atom/target, blocked = FALSE)
+	. = ..()
+	playsound(src, 'sound/magic/swap.ogg', 100)
 
 //==============================================
-//	ELDRITCH BLAST
+//	ENCODE THOUGHTS
 //==============================================
-// Notes: You hurl a bubble of acid, a slow moving bubble projectile that deals light burn damage in an aoe
+//Fine. I'll add it.
+/obj/effect/proc_holder/spell/invoked/encodethoughts5e
+	name = "Encode Thoughts"
+	desc = "Latch onto the mind of one who is nearby, weaving a particular thought into their mind."
+	name = "Encode Thoughts"
+	overlay_state = "null"
+	releasedrain = 50
+	chargetime = 1
+	charge_max = 1 SECONDS
+	//chargetime = 10
+	//charge_max = 30 SECONDS
+	range = 6
+	warnie = "spellwarning"
+	movement_interrupt = FALSE
+	no_early_release = FALSE
+	chargedloop = null
+	sound = 'sound/magic/whiteflame.ogg'
+	chargedloop = /datum/looping_sound/invokegen
+	associated_skill = /datum/skill/magic/arcane //can be arcane, druidic, blood, holy
+	cost = 1
+
+	xp_gain = FALSE
+	miracle = FALSE
+
+	invocation = ""
+	invocation_type = "shout" //can be none, whisper, emote and shout
+
+/obj/effect/proc_holder/spell/invoked/encodethoughts5e/cast(list/targets, mob/user)
+	. = ..()
+	if(isliving(targets[1]))
+		var/mob/living/target = targets[1]
+		if(!target)
+			return
+		var/message = stripped_input(user, "What thought do you wish to weave into [target]'s mind?")
+		if(!message)
+			return
+		to_chat(target, "Your mind thinks to itself: </span><font color=#7246ff>\"[message]\"</font>")
+		to_chat(user, "I pluck the strings of [target]'s mind")
+		log_game("[key_name(user)] sent a message to [key_name(target)] with contents [message]")
+		return TRUE
+	to_chat(user, span_warning("I wasn't able to find a mind to weave here."))
+	revert_cast()
+
+//==============================================
+//	FIRE BOLT
+//==============================================
+// Notes: 
 
 /obj/effect/proc_holder/spell/invoked/projectile/firebolt5e
 	name = "Fire Bolt"
@@ -544,6 +701,11 @@
 	flag = "magic"
 	hitsound = 'sound/blank.ogg'
 	aoe_range = 0
+
+//==============================================
+//	FRIENDS
+//==============================================
+//lame. skip. You aren't going to get a player to become friendly.
 
 //==============================================
 //	FROSTBITE
@@ -583,7 +745,7 @@
 	id = "frostbite"
 	alert_type = /atom/movable/screen/alert/status_effect/buff/frostbite5e
 	duration = 20 SECONDS
-	var/static/mutable_appearance/frost = mutable_appearance('icons/effects/weather_effects.dmi', "light_snow")
+	var/static/mutable_appearance/frost = mutable_appearance('icons/effects/atmospherics.dmi', "freon_old")
 	effectedstats = list("speed" = -2)
 
 /atom/movable/screen/alert/status_effect/buff/frostbite5e
@@ -596,12 +758,70 @@
 	var/mob/living/target = owner
 	target.add_overlay(frost)
 	target.update_vision_cone()
+	var/newcolor = rgb(100, 172, 255)
+	target.add_atom_colour(newcolor, TEMPORARY_COLOUR_PRIORITY)
+	addtimer(CALLBACK(target, TYPE_PROC_REF(/atom, remove_atom_colour), TEMPORARY_COLOUR_PRIORITY, newcolor), 20 SECONDS)
 
 /datum/status_effect/buff/frostbite5e/on_remove()
 	var/mob/living/target = owner
 	target.cut_overlay(frost)
 	target.update_vision_cone()
 	. = ..()
+
+//==============================================
+//	GREEN-FLAME BLADE
+//==============================================
+/obj/effect/proc_holder/spell/invoked/greenflameblade5e
+	name = "Green-Flame Blade"
+	overlay_state = "null"
+	releasedrain = 50
+	chargetime = 1
+	charge_max = 1 SECONDS
+	//chargetime = 10
+	//charge_max = 30 SECONDS
+	range = 6
+	warnie = "spellwarning"
+	movement_interrupt = FALSE
+	no_early_release = FALSE
+	chargedloop = null
+	sound = 'sound/magic/whiteflame.ogg'
+	chargedloop = /datum/looping_sound/invokegen
+	associated_skill = /datum/skill/magic/arcane //can be arcane, druidic, blood, holy
+	cost = 1
+
+	xp_gain = FALSE
+	miracle = FALSE
+
+	invocation = ""
+	invocation_type = "shout" //can be none, whisper, emote and shout
+	
+/obj/effect/proc_holder/spell/invoked/greenflameblade5e/cast(list/targets, mob/living/user)
+	var/mob/living/carbon/target = targets[1]
+	var/mob/living/L = target
+	var/mob/U = user
+	var/obj/item/held_item = user.get_active_held_item() //get held item
+	var/aoe_range = 1
+	if(held_item)
+		held_item.melee_attack_chain(U, L)
+		L.adjustFireLoss(15) //burn target
+		playsound(target, 'sound/items/firesnuff.ogg', 100)
+		//burn effect and sound
+		for(var/mob/living/M in range(aoe_range, get_turf(target))) //burn non-user mobs in an aoe
+			if(!M.anti_magic_check())
+				if(M != user)
+					M.adjustFireLoss(15) //burn target
+					//burn effect and sound
+					new /obj/effect/temp_visual/acidsplash5e(get_turf(M))
+					playsound(M, 'sound/items/firelight.ogg', 100)
+
+/obj/effect/temp_visual/greenflameblade5e
+	icon = 'icons/effects/fire.dmi'
+	icon_state = "1"
+	name = "green-flame"
+	desc = "Magical fire. Interesting."
+	randomdir = FALSE
+	duration = 1 SECONDS
+	layer = ABOVE_ALL_MOB_LAYER
 
 //==============================================
 //	GUIDANCE
@@ -633,18 +853,49 @@
 /obj/effect/proc_holder/spell/invoked/guidance5e/cast(list/targets, mob/living/user)
 	if(isliving(targets[1]))
 		var/mob/living/carbon/target = targets[1]
-		target.apply_status_effect(/datum/status_effect/buff/guidance5e/) //apply debuff
+		if(target != user)
+			var/datum/status_effect/buff/guidance5e/G = new /datum/status_effect/buff/guidance5e/
+			G.giver = user
+			target.apply_status_effect(G) //apply buff
+			to_chat(target, span_info("You are illuminated by [user]'s guiding light."))
+			target.visible_message(span_info("[target] is illuminated by a guiding presence!"), span_info("You begin to guide [target]."))
+		else
+			to_chat(target, span_warning("You can't guide yourself!"))
 
 /datum/status_effect/buff/guidance5e
-	id = "frostbite"
+	id = "guidance"
 	alert_type = /atom/movable/screen/alert/status_effect/buff/guidance5e
 	duration = 30 SECONDS
 	effectedstats = list("intelligence" = 2)
+	var/static/mutable_appearance/guided = mutable_appearance('icons/effects/effects.dmi', "blessed")
+	var/mob/living/carbon/giver
+
+/datum/status_effect/buff/guidance5e/on_apply()
+	. = ..()
+	var/mob/living/target = owner
+	target.add_overlay(guided)
+	target.update_vision_cone()
+
+/datum/status_effect/buff/guidance5e/on_remove()
+	var/mob/living/target = owner
+	target.cut_overlay(guided)
+	target.update_vision_cone()
+	. = ..()
 
 /atom/movable/screen/alert/status_effect/buff/guidance5e
 	name = "Guidance"
-	desc = "A mentor is guiding me."
+	desc = "Someone is guiding me."
 	icon_state = "buff"
+
+//==============================================
+//	GUST
+//==============================================
+//lame. skip. Kinda boring tbh. Might add later
+
+//==============================================
+//	HAND OF RADIANCE
+//==============================================
+//lame. skip. Without the ability to choose enemies real time not really viable an aoe like this. Maybe would be good as an aoe flash. Might add later
 
 //==============================================
 //	INFESTATION
@@ -686,11 +937,6 @@
 	effectedstats = list("constitution" = -2)
 	var/static/mutable_appearance/rotten = mutable_appearance('icons/roguetown/mob/rotten.dmi', "rotten")
 
-/atom/movable/screen/alert/status_effect/buff/infestation5e
-	name = "Infestation"
-	desc = "Pestilent vermin bite and chew at my skin."
-	icon_state = "debuff"
-
 /datum/status_effect/buff/infestation5e/on_apply()
 	. = ..()
 	var/mob/living/target = owner
@@ -702,7 +948,7 @@
 	var/mob/living/target = owner
 	target.cut_overlay(rotten)
 	target.update_vision_cone()
-	. = ..()
+	. = ..() 
 
 /datum/status_effect/buff/infestation5e/tick()
 	var/mob/living/target = owner
@@ -733,11 +979,16 @@
 		to_chat(target, span_warning(message))
 		owner.playsound_local(get_turf(owner), 'sound/surgery/organ2.ogg', 35, FALSE, pressure_affected = FALSE)
 
+/atom/movable/screen/alert/status_effect/buff/infestation5e
+	name = "Infestation"
+	desc = "Pestilent vermin bite and chew at my skin."
+	icon_state = "debuff"
+
 //==============================================
-//	MAGIC STONE
+//	LIGHT
 //==============================================
-/obj/effect/proc_holder/spell/invoked/magicstone5e
-	name = "Magic Stone"
+/obj/effect/proc_holder/spell/targeted/light5e
+	name = "Light"
 	overlay_state = "null"
 	releasedrain = 50
 	chargetime = 1
@@ -759,58 +1010,213 @@
 
 	invocation = ""
 	invocation_type = "shout" //can be none, whisper, emote and shout
+	include_user = TRUE
+
+	var/obj/item/item
+	var/item_type = /obj/item/flashlight/flare/light5e
+	var/delete_old = TRUE //TRUE to delete the last summoned object if it's still there, FALSE for infinite item stream weeeee
+
+/obj/effect/proc_holder/spell/targeted/light5e/cast(list/targets, mob/user = usr)
+	if (delete_old && item && !QDELETED(item))
+		QDEL_NULL(item)
+	for(var/mob/living/carbon/C in targets)
+		if(C.dropItemToGround(C.get_active_held_item()))
+			C.put_in_hands(make_item(), TRUE)
+
+/obj/effect/proc_holder/spell/targeted/light5e/Destroy()
+	if(item)
+		qdel(item)
+	return ..()
+
+/obj/effect/proc_holder/spell/targeted/light5e/proc/make_item()
+	item = new item_type
+	return item
+
+/obj/item/flashlight/flare/light5e
+	name = "condensed light"
+	desc = "An orb of condensed light."
+	w_class = WEIGHT_CLASS_NORMAL
+	light_range = 10
+	light_color = LIGHT_COLOR_WHITE
+	force = 10
+	icon = 'icons/roguetown/rav/obj/cult.dmi'
+	icon_state = "sphere0"
+	item_state = "sphere0"
+	lefthand_file = 'icons/mob/inhands/items_lefthand.dmi'
+	righthand_file = 'icons/mob/inhands/items_righthand.dmi'
+	light_color = "#ffffff"
+	on_damage = 10
+	flags_1 = null
+	possible_item_intents = list(/datum/intent/use)
+	slot_flags = ITEM_SLOT_HIP
+	var/datum/looping_sound/torchloop/soundloop
+	max_integrity = 200
+	fuel = 10 MINUTES
+	light_depth = 0
+	light_height = 0
+
+/obj/item/flashlight/flare/light5e/getonmobprop(tag)
+	. = ..()
+	if(tag)
+		switch(tag)
+			if("gen")
+				return list("shrink" = 0.7,"sx" = -9,"sy" = 3,"nx" = 12,"ny" = 4,"wx" = -6,"wy" = 5,"ex" = 3,"ey" = 6,"northabove" = 0,"southabove" = 1,"eastabove" = 1,"westabove" = 0,"nturn" = 2,"sturn" = 2,"wturn" = -2,"eturn" = -2,"nflip" = 0,"sflip" = 8,"wflip" = 8,"eflip" = 0)
+			if("onbelt")
+				return list("shrink" = 0.3,"sx" = -2,"sy" = -5,"nx" = 4,"ny" = -5,"wx" = 0,"wy" = -5,"ex" = 2,"ey" = -5,"nturn" = 0,"sturn" = 0,"wturn" = 0,"eturn" = 0,"nflip" = 0,"sflip" = 0,"wflip" = 0,"eflip" = 0,"northabove" = 0,"southabove" = 1,"eastabove" = 1,"westabove" = 0)
+
+/obj/item/flashlight/flare/light5e/Initialize()
+	. = ..()
+	soundloop = new(list(src), FALSE)
+
+/obj/item/flashlight/flare/light5e/process()
+	on = TRUE
+	update_brightness()
+	open_flame(heat)
+	if(!fuel || !on)
+		//turn_off()
+		STOP_PROCESSING(SSobj, src)
+		if(!fuel)
+			icon_state = "sphere0"
+		return
+	if(!istype(loc,/obj/machinery/light/rogue/torchholder))
+		if(!ismob(loc))
+			if(prob(23))
+				//turn_off()
+				STOP_PROCESSING(SSobj, src)
+				return
+
+/obj/item/flashlight/flare/light5e/turn_off()
+	playsound(src.loc, 'sound/items/firesnuff.ogg', 100)
+	soundloop.stop()
+	STOP_PROCESSING(SSobj, src)
+	..()
+	if(ismob(loc))
+		var/mob/M = loc
+		M.update_inv_hands()
+		M.update_inv_belt()
+	damtype = BRUTE
+	Destroy(src)
+
+/obj/item/flashlight/flare/light5e/fire_act(added, maxstacks)
+	if(fuel)
+		if(!on)
+			playsound(src.loc, 'sound/items/firelight.ogg', 100)
+			on = TRUE
+			damtype = BURN
+			update_brightness()
+			force = on_damage
+			soundloop.start()
+			if(ismob(loc))
+				var/mob/M = loc
+				M.update_inv_hands()
+			START_PROCESSING(SSobj, src)
+			return TRUE
+	..()
+
+/obj/item/flashlight/flare/light5e/afterattack(atom/movable/A, mob/user, proximity)
+	. = ..()
+	if(!proximity)
+		return
+	if(on)
+		if(prob(50) || (user.used_intent.type == /datum/intent/use))
+			if(ismob(A))
+				A.spark_act()
+			else
+				A.fire_act(3,3)
+
+/obj/item/flashlight/flare/light5e/spark_act()
+	fire_act()
+
+/obj/item/flashlight/flare/light5e/get_temperature()
+	if(on)
+		return FIRE_MINIMUM_TEMPERATURE_TO_SPREAD
+	return ..()
+
+/obj/item/flashlight/flare/light5e/update_brightness(mob/user = null)
+	..()
+	if(on)
+		item_state = "[initial(item_state)]"
+	else
+		item_state = "[initial(item_state)]"
+
+//==============================================
+//	LIGHTNING LURE
+//==============================================
+
+//==============================================
+//	MAGE HAND
+//==============================================
+//lame. skip. Same functionality as on/off which I intend to add later.
+
+//==============================================
+//	MAGIC STONE
+//==============================================
+
+
+//==============================================
+//	MENDING
+//==============================================
+
+//==============================================
+//	MESSAGE
+//==============================================
+//lame. skip. Already in the game. Might improve it later.
 
 /*
-X = added
-S = skipped
-X Acid Splash	Conjuration	1 Action	60 Feet	Instantaneous	V, S
-X Blade Ward	Abjuration	1 Action	Self	1 round	V, S
-X Booming Blade	Evocation	1 Action	Self (5-foot radius)	1 round	S, M
-X Chill Touch	Necromancy	1 Action	120 feet	1 round	V, S
-S Control Flames	Transmutation	1 Action	60 Feet	Instantaneous or 1 hour	S
-S Create Bonfire	Conjuration	1 Action	60 Feet	Concentration, up to 1 minute	V, S
-S Dancing Lights	Evocation	1 Action	120 feet	Concentration up to 1 minute	V, S, M
-X Decompose (HB)	Necromancy	1 Action	Touch	1 minute	V, S
-S Druidcraft	Transmutation	1 Action	30 Feet	Instantaneous	V, S
-X Eldritch Blast	Evocation	1 Action	120 Feet	Instantaneous	V, S
-S Encode Thoughts	Enchantment	1 Action	Self	8 hours	S
-X Fire Bolt	Evocation	1 Action	120 feet	Instantaneous	V, S
-S Friends	Enchantment	1 Action	Self	Concentration, up to 1 minute	S, M
-X Frostbite	Evocation	1 Action	60 feet	Instantaneous	V, S
-Green-Flame Blade	Evocation	1 Action	Self (5-foot radius)	Instantaneous	S, M
-X Guidance	Divination	1 Action	Touch	Concentration up to 1 minute	V, S
-S Gust	Transmutation	1 Action	30 feet	Instantaneous	V, S
-S Hand of Radiance (UA)	Evocation	1 Action	5 feet	Instantaneous	V, S
-X Infestation	Conjuration	1 Action	30 feet	Instantaneous	V, S, M
-S Light	Evocation	1 Action	Touch	1 hour	V, M
-Lightning Lure	Evocation	1 Action	Self (15-foot radius)	Instantaneous	V
-S Mage Hand	Conjuration	1 Action	30 feet	1 minute	V, S
-Magic Stone	Transmutation	1 Bonus Action	Touch	1 minute	V, S
-Mending	Transmutation	1 Minute	Touch	Instantaneous	V, S, M
-S Message	Transmutation	1 Action	120 feet	1 round	V, S, M
-Mind Sliver	Enchantment	1 Action	60 feet	1 round	V
-Minor Illusion	Illusion	1 Action	30 feet	1 minute	S, M
-Mold Earth	Transmutation	1 Action	30 feet	Instantaneous or 1 hour	S
-On/Off (UA)	Transmutation T	1 Action	60 feet	Instantaneous	V, S
-Poison Spray	Conjuration	1 Action	10 feet	Instantaneous	V, S
-Prestidigitation	Transmutation	1 Action	10 feet	Up to 1 hour	V, S
-Primal Savagery	Transmutation	1 Action	Self	Self	S
-Produce Flame	Conjuration	1 Action	Self	10 minutes	V, S
-Ray of Frost	Evocation	1 Action	60 feet	Instantaneous	V, S
-Resistance	Abjuration	1 Action	Touch	Concentration up to 1 minute	V, S, M
-Sacred Flame	Evocation	1 Action	60 feet	Instantaneous	V, S
-Sapping Sting	Necromancy D	1 Action	30 feet	Instantaneous	V, S
-Shape Water	Transmutation	1 Action	30 feet	Instantaneous or 1 hour	S
-Shillelagh	Transmutation	1 Bonus Action	Touch	1 minute	V, S, M
-Shocking Grasp	Evocation	1 Action	Touch	Instantaneous	V, S
-Spare the Dying	Necromancy	1 Action	Touch	Instantaneous	V, S
-Sword Burst	Conjuration	1 Action	Self (5-foot radius)	Instantaneous	V
-Thaumaturgy	Transmutation	1 Action	30 feet	Up to 1 minute	V
-Thorn Whip	Transmutation	1 Action	30 feet	Instantaneous	V, S, M
-Thunderclap	Evocation	1 Action	Self (5-foot radius)	Instantaneous	S
-Toll the Dead	Necromancy	1 Action	60 feet	Instantaneous	V, S
-True Strike	Divination	1 Action	30 feet	Concentration up to 1 round	S
-Vicious Mockery	Enchantment	1 Action	60 feet	Instantaneous	V
-Virtue (UA)	Abjuration	1 Action	Touch	1 round	V, S
-Word of Radiance	Evocation	1 Action	5 feet	Instantaneous	V, M
+XX	added
+X	added, needs work
+S	skipped, might add later
+SS	skipped
+
+XX	Acid Splash			Conjuration		1 Action		60 Feet				Instantaneous	V, S
+XX 	Blade Ward			Abjuration		1 Action		Self				1 round			V, S
+X 	Booming Blade		Evocation		1 Action		Self (5-foot radius)1 round			S, M
+XX 	Chill Touch			Necromancy		1 Action		120 feet			1 round			V, S
+SS 	Control Flames		Transmutation	1 Action		60 Feet				Instantaneous	S
+XX 	Create Bonfire		Conjuration		1 Action		60 Feet				1 minute		V, S
+S 	Dancing Lights		Evocation		1 Action		120 feet			1 minute		V, S, M
+X 	Decompose (HB)		Necromancy		1 Action		Touch				1 minute		V, S
+SS 	Druidcraft			Transmutation	1 Action		30 Feet				Instantaneous	V, S
+XX 	Eldritch Blast		Evocation		1 Action		120 Feet			Instantaneous	V, S
+XX 	Encode Thoughts		Enchantment		1 Action		Self				8 hours			S
+XX 	Fire Bolt			Evocation		1 Action		120 feet			Instantaneous	V, S
+SS 	Friends				Enchantment		1 Action		Self				1 minute		S, M
+XX 	Frostbite			Evocation		1 Action		60 feet				Instantaneous	V, S
+X	Green-Flame Blade	Evocation		1 Action		Self (5-foot radius)Instantaneous	S, M
+XX 	Guidance			Divination		1 Action		Touch				1 minute		V, S
+S 	Gust				Transmutation	1 Action		30 feet				Instantaneous	V, S
+S 	Hand of Radiance	Evocation		1 Action		5 feet				Instantaneous	V, S
+XX 	Infestation			Conjuration		1 Action		30 feet				Instantaneous	V, S, M
+XX 	Light				Evocation		1 Action		Touch				1 hour			V, M
+	Lightning Lure		Evocation		1 Action		Self(15-foot radius)Instantaneous	V
+S	Mage Hand			Conjuration		1 Action		30 feet				1 minute		V, S
+	Magic Stone			Transmutation	1 Bonus Action	Touch				1 minute		V, S
+	Mending				Transmutation	1 Minute		Touch				Instantaneous	V, S, M
+SS 	Message				Transmutation	1 Action		120 feet			1 round			V, S, M
+
+	Mind Sliver	Enchantment	1 Action	60 feet	1 round	V
+	Minor Illusion	Illusion	1 Action	30 feet	1 minute	S, M
+	Mold Earth	Transmutation	1 Action	30 feet	Instantaneous or 1 hour	S
+	On/Off (UA)	Transmutation T	1 Action	60 feet	Instantaneous	V, S
+	Poison Spray	Conjuration	1 Action	10 feet	Instantaneous	V, S
+	Prestidigitation	Transmutation	1 Action	10 feet	Up to 1 hour	V, S
+	Primal Savagery	Transmutation	1 Action	Self	Self	S
+	Produce Flame	Conjuration	1 Action	Self	10 minutes	V, S
+	Ray of Frost	Evocation	1 Action	60 feet	Instantaneous	V, S
+	Resistance	Abjuration	1 Action	Touch	Concentration up to 1 minute	V, S, M
+	Sacred Flame	Evocation	1 Action	60 feet	Instantaneous	V, S
+	Sapping Sting	Necromancy D	1 Action	30 feet	Instantaneous	V, S
+	Shape Water	Transmutation	1 Action	30 feet	Instantaneous or 1 hour	S
+	Shillelagh	Transmutation	1 Bonus Action	Touch	1 minute	V, S, M
+	Shocking Grasp	Evocation	1 Action	Touch	Instantaneous	V, S
+	Spare the Dying	Necromancy	1 Action	Touch	Instantaneous	V, S
+	Sword Burst	Conjuration	1 Action	Self (5-foot radius)	Instantaneous	V
+	Thaumaturgy	Transmutation	1 Action	30 feet	Up to 1 minute	V
+	Thorn Whip	Transmutation	1 Action	30 feet	Instantaneous	V, S, M
+	Thunderclap	Evocation	1 Action	Self (5-foot radius)	Instantaneous	S
+	Toll the Dead	Necromancy	1 Action	60 feet	Instantaneous	V, S
+	True Strike	Divination	1 Action	30 feet	Concentration up to 1 round	S
+	Vicious Mockery	Enchantment	1 Action	60 feet	Instantaneous	V
+	Virtue (UA)	Abjuration	1 Action	Touch	1 round	V, S
+	Word of Radiance	Evocation	1 Action	5 feet	Instantaneous	V, M
 */
