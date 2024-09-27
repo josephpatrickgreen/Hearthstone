@@ -1,33 +1,25 @@
-//		   _   _                                           __                      _                    
+//		   _   _ Ham-Hole's                                __                      _                    
 //		  /_\ | |_ __ ___   __ _ _ __   __ _  ___    ___  / _|   /\/\   __ _ _   _| |__   ___ _ __ ___  
 //		 //_\\| | '_ ` _ \ / _` | '_ \ / _` |/ __|  / _ \| |_   /    \ / _` | | | | '_ \ / _ \ '_ ` _ \ 
 //		/  _  \ | | | | | | (_| | | | | (_| | (__  | (_) |  _| / /\/\ \ (_| | |_| | | | |  __/ | | | | |
 //		\_/ \_/_|_| |_| |_|\__,_|_| |_|\__,_|\___|  \___/|_|   \/    \/\__,_|\__, |_| |_|\___|_| |_| |_|
 //		                                                                     |___/                      
 
-// Ham-Hole's notes: When I was thinking about an ultimate magic update. I would have non-cantrip spells be refunded on sleep.
+// Notes: When I was thinking about an ultimate magic update. I would have non-cantrip spells be refunded on sleep.
 // in DND a wizard must prepare his spells each day. I would also attempt to bring a per-day/per-sleep limit to spells that are of higher level.
 // With that in mind, since these spells are ones which are permanently attached to your character (in my head-code)
 // these are the ones that don't provide you experience as higher level magic should. These are also meant to damage/utility scale with arcane skill later.
 // Please enjoy.
 
-//Special Thanks:
-// apple tree
-// Moribun
-// Vivi
-// The peasants of hearthstone
+//Contributors:
 
-// TO DO:
-// begin playtest
+// ways you can contribute:
 // balance damage
 // balance cooldowns
 // balance stamina loss from spell
-// make learnable
-// end playtest
-// improve visuals at leisure
-// improve dictation at leisure
-// improve sound at leisure
-// improve lore at leisure
+// improve visuals
+// improve dictation
+// improve sound
 // improve utility eg. maybe acid splash can skeletonize a limb if casted by a high level mage
 
 //==============================================
@@ -745,7 +737,7 @@
 	id = "frostbite"
 	alert_type = /atom/movable/screen/alert/status_effect/buff/frostbite5e
 	duration = 20 SECONDS
-	var/static/mutable_appearance/frost = mutable_appearance('icons/effects/atmospherics.dmi', "freon_old")
+	var/static/mutable_appearance/frost = mutable_appearance('icons/roguetown/mob/coldbreath.dmi', "breath_m", ABOVE_ALL_MOB_LAYER)
 	effectedstats = list("speed" = -2)
 
 /atom/movable/screen/alert/status_effect/buff/frostbite5e
@@ -758,7 +750,7 @@
 	var/mob/living/target = owner
 	target.add_overlay(frost)
 	target.update_vision_cone()
-	var/newcolor = rgb(100, 172, 255)
+	var/newcolor = rgb(136, 191, 255)
 	target.add_atom_colour(newcolor, TEMPORARY_COLOUR_PRIORITY)
 	addtimer(CALLBACK(target, TYPE_PROC_REF(/atom, remove_atom_colour), TEMPORARY_COLOUR_PRIORITY, newcolor), 20 SECONDS)
 
@@ -941,6 +933,7 @@
 	. = ..()
 	var/mob/living/target = owner
 	to_chat(owner, span_danger("I am suddenly surrounded by a cloud of bugs!"))
+	target.Jitter(20)
 	target.add_overlay(rotten)
 	target.update_vision_cone()
 
@@ -987,7 +980,7 @@
 //==============================================
 //	LIGHT
 //==============================================
-/obj/effect/proc_holder/spell/targeted/light5e
+/obj/effect/proc_holder/spell/self/light5e
 	name = "Light"
 	overlay_state = "null"
 	releasedrain = 50
@@ -1010,25 +1003,24 @@
 
 	invocation = ""
 	invocation_type = "shout" //can be none, whisper, emote and shout
-	include_user = TRUE
 
 	var/obj/item/item
 	var/item_type = /obj/item/flashlight/flare/light5e
 	var/delete_old = TRUE //TRUE to delete the last summoned object if it's still there, FALSE for infinite item stream weeeee
 
-/obj/effect/proc_holder/spell/targeted/light5e/cast(list/targets, mob/user = usr)
+/obj/effect/proc_holder/spell/self/light5e/cast(list/targets, mob/user = usr)
 	if (delete_old && item && !QDELETED(item))
 		QDEL_NULL(item)
-	for(var/mob/living/carbon/C in targets)
-		if(C.dropItemToGround(C.get_active_held_item()))
-			C.put_in_hands(make_item(), TRUE)
+		if(user.dropItemToGround(user.get_active_held_item()))
+			user.put_in_hands(make_item(), TRUE)
+			user.visible_message(span_info("An orb of light condenses in [user]'s hand!"), span_info("You condense an orb of pure light!"))
 
-/obj/effect/proc_holder/spell/targeted/light5e/Destroy()
+/obj/effect/proc_holder/spell/self/light5e/Destroy()
 	if(item)
 		qdel(item)
 	return ..()
 
-/obj/effect/proc_holder/spell/targeted/light5e/proc/make_item()
+/obj/effect/proc_holder/spell/self/light5e/proc/make_item()
 	item = new item_type
 	return item
 
@@ -1143,6 +1135,55 @@
 //	LIGHTNING LURE
 //==============================================
 
+/obj/effect/proc_holder/spell/targeted/lightninglure5e
+	name = "Lightning Lure"
+	overlay_state = "null"
+	releasedrain = 50
+	chargetime = 1
+	charge_max = 1 SECONDS
+	//chargetime = 10
+	//charge_max = 30 SECONDS
+	range = 3
+	warnie = "spellwarning"
+	movement_interrupt = FALSE
+	no_early_release = FALSE
+	chargedloop = null
+	sound = 'sound/magic/whiteflame.ogg'
+	chargedloop = /datum/looping_sound/invokegen
+	associated_skill = /datum/skill/magic/arcane //can be arcane, druidic, blood, holy
+	cost = 1
+
+	xp_gain = FALSE
+	miracle = FALSE
+
+	invocation = ""
+	invocation_type = "shout" //can be none, whisper, emote and shout
+	include_user = FALSE
+
+	var/delay = 3 SECONDS
+	var/sprite_changes = 10
+	var/datum/beam/current_beam = null
+
+obj/effect/proc_holder/spell/targeted/lightninglure5e/cast(list/targets, mob/user = usr)
+	for(var/mob/living/carbon/C in targets)
+		user.visible_message(span_warning("[C] is connected to [user] with a lightning lure!"), span_warning("You create a static link with [C]."))
+		playsound(user, 'sound/items/stunmace_gen (2).ogg', 100)
+
+		var/x 
+		for(x=1; x < sprite_changes; x++)
+			current_beam = new(user,C,time=30/sprite_changes,beam_icon_state="lightning[rand(1,12)]",btype=/obj/effect/ebeam, maxdistance=10)
+			INVOKE_ASYNC(current_beam, TYPE_PROC_REF(/datum/beam, Start))
+			sleep(delay/sprite_changes)
+
+		var/dist = get_dist(user, C)
+		if (dist <= range)
+			C.electrocute_act(1, user) //just shock	
+			//var/atom/throw_target = get_step(user, get_dir(user, C))
+			//C.throw_at(throw_target, 100, 2) //from source material but kinda op.
+		else
+			playsound(user, 'sound/items/stunmace_toggle (3).ogg', 100)
+			user.visible_message(span_warning("The lightning lure fizzles out!"), span_warning("[C] is too far away!"))
+			
 //==============================================
 //	MAGE HAND
 //==============================================
@@ -1151,16 +1192,93 @@
 //==============================================
 //	MAGIC STONE
 //==============================================
+/obj/effect/proc_holder/spell/invoked/magicstone5e
+	name = "Magic Stone"
+	overlay_state = "null"
+	releasedrain = 50
+	chargetime = 1
+	charge_max = 1 SECONDS
+	//chargetime = 10
+	//charge_max = 30 SECONDS
+	range = 6
+	warnie = "spellwarning"
+	movement_interrupt = FALSE
+	no_early_release = FALSE
+	chargedloop = null
+	sound = 'sound/magic/whiteflame.ogg'
+	chargedloop = /datum/looping_sound/invokegen
+	associated_skill = /datum/skill/magic/arcane //can be arcane, druidic, blood, holy
+	cost = 1
 
+	xp_gain = FALSE
+	miracle = FALSE
 
+	invocation = ""
+	invocation_type = "shout" //can be none, whisper, emote and shout
+	var/magic_color = "#c8daff"
+
+/obj/effect/proc_holder/spell/invoked/magicstone5e/cast(list/targets, mob/living/user)
+	if(istype(targets[1], /obj/item/natural/stone))
+		var/obj/item/natural/stone/S = targets[1]
+		to_chat(user, "<span class='info'>[S] is infused with magical energy!</span>")
+		S.name = "magic "+S.name
+		S.force *= 1.5 //ouchy
+		S.throwforce *= 1.5 //ouchy
+		S.color = magic_color
+		var/mutable_appearance/magic_overlay = mutable_appearance('icons/effects/effects.dmi', "electricity")
+		S.add_overlay(magic_overlay)
+	else
+		to_chat(user, span_warning("There is no stone here!"))
+		revert_cast()
 //==============================================
 //	MENDING
 //==============================================
 
+/obj/effect/proc_holder/spell/invoked/mending5e
+	name = "Mending"
+	overlay_state = "null"
+	releasedrain = 50
+	chargetime = 1
+	charge_max = 1 SECONDS
+	//chargetime = 10
+	//charge_max = 30 SECONDS
+	range = 6
+	warnie = "spellwarning"
+	movement_interrupt = FALSE
+	no_early_release = FALSE
+	chargedloop = null
+	sound = 'sound/magic/whiteflame.ogg'
+	chargedloop = /datum/looping_sound/invokegen
+	associated_skill = /datum/skill/magic/arcane //can be arcane, druidic, blood, holy
+	cost = 1
+
+	xp_gain = FALSE
+	miracle = FALSE
+
+	invocation = ""
+	invocation_type = "shout" //can be none, whisper, emote and shout
+
+/obj/effect/proc_holder/spell/invoked/magicstone5e/cast(list/targets, mob/living/user)
+	if(istype(targets[1], /obj/item))
+		var/obj/item/I = targets[1]
+		if(I.obj_integrity >= I.max_integrity)
+			var/repair_percent = 0.25
+			repair_percent *= I.max_integrity
+			I.obj_integrity = min(I.obj_integrity + repair_percent, I.max_integrity)
+			user.visible_message(span_info("[I] glows in a faint mending light."))
+			if(I.obj_broken == TRUE)
+				I.obj_broken = FALSE
+		else
+			user.visible_message(span_info("[I] appears to be in pefect condition."))
+			revert_cast()
+	else
+		to_chat(user, span_warning("There is no item here!"))
+		revert_cast()
+
 //==============================================
 //	MESSAGE
 //==============================================
-//lame. skip. Already in the game. Might improve it later.
+//lame. skip. Already in the game.
 
 /*
 XX	added
@@ -1188,19 +1306,21 @@ S 	Gust				Transmutation	1 Action		30 feet				Instantaneous	V, S
 S 	Hand of Radiance	Evocation		1 Action		5 feet				Instantaneous	V, S
 XX 	Infestation			Conjuration		1 Action		30 feet				Instantaneous	V, S, M
 XX 	Light				Evocation		1 Action		Touch				1 hour			V, M
-	Lightning Lure		Evocation		1 Action		Self(15-foot radius)Instantaneous	V
+XX	Lightning Lure		Evocation		1 Action		Self(15-foot radius)Instantaneous	V
 S	Mage Hand			Conjuration		1 Action		30 feet				1 minute		V, S
-	Magic Stone			Transmutation	1 Bonus Action	Touch				1 minute		V, S
-	Mending				Transmutation	1 Minute		Touch				Instantaneous	V, S, M
+XX	Magic Stone			Transmutation	1 Bonus Action	Touch				1 minute		V, S
+XX	Mending				Transmutation	1 Minute		Touch				Instantaneous	V, S, M
 SS 	Message				Transmutation	1 Action		120 feet			1 round			V, S, M
+
+//we are here
 
 	Mind Sliver	Enchantment	1 Action	60 feet	1 round	V
 	Minor Illusion	Illusion	1 Action	30 feet	1 minute	S, M
 	Mold Earth	Transmutation	1 Action	30 feet	Instantaneous or 1 hour	S
 	On/Off (UA)	Transmutation T	1 Action	60 feet	Instantaneous	V, S
 	Poison Spray	Conjuration	1 Action	10 feet	Instantaneous	V, S
-	Prestidigitation	Transmutation	1 Action	10 feet	Up to 1 hour	V, S
-	Primal Savagery	Transmutation	1 Action	Self	Self	S
+SS	Prestidigitation	Transmutation	1 Action	10 feet	Up to 1 hour	V, S
+S	Primal Savagery	Transmutation	1 Action	Self	Self	S
 	Produce Flame	Conjuration	1 Action	Self	10 minutes	V, S
 	Ray of Frost	Evocation	1 Action	60 feet	Instantaneous	V, S
 	Resistance	Abjuration	1 Action	Touch	Concentration up to 1 minute	V, S, M
@@ -1209,14 +1329,14 @@ SS 	Message				Transmutation	1 Action		120 feet			1 round			V, S, M
 	Shape Water	Transmutation	1 Action	30 feet	Instantaneous or 1 hour	S
 	Shillelagh	Transmutation	1 Bonus Action	Touch	1 minute	V, S, M
 	Shocking Grasp	Evocation	1 Action	Touch	Instantaneous	V, S
-	Spare the Dying	Necromancy	1 Action	Touch	Instantaneous	V, S
+S	Spare the Dying	Necromancy	1 Action	Touch	Instantaneous	V, S
 	Sword Burst	Conjuration	1 Action	Self (5-foot radius)	Instantaneous	V
-	Thaumaturgy	Transmutation	1 Action	30 feet	Up to 1 minute	V
+SS	Thaumaturgy	Transmutation	1 Action	30 feet	Up to 1 minute	V
 	Thorn Whip	Transmutation	1 Action	30 feet	Instantaneous	V, S, M
 	Thunderclap	Evocation	1 Action	Self (5-foot radius)	Instantaneous	S
 	Toll the Dead	Necromancy	1 Action	60 feet	Instantaneous	V, S
 	True Strike	Divination	1 Action	30 feet	Concentration up to 1 round	S
-	Vicious Mockery	Enchantment	1 Action	60 feet	Instantaneous	V
+XX	Vicious Mockery	Enchantment	1 Action	60 feet	Instantaneous	V
 	Virtue (UA)	Abjuration	1 Action	Touch	1 round	V, S
-	Word of Radiance	Evocation	1 Action	5 feet	Instantaneous	V, M
+S	Word of Radiance	Evocation	1 Action	5 feet	Instantaneous	V, M
 */
