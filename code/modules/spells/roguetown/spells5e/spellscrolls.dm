@@ -149,3 +149,21 @@
 	spell = /obj/effect/proc_holder/spell/invoked/mindsliver5e
 	spellname = "mind sliver"
 	icon_state ="scrollred"
+
+/obj/item/book/granter/spell/spells5e/poisonspray5e
+	name = "Scroll of Poison Spray"
+	spell = /obj/effect/proc_holder/spell/invoked/poisonspray5e
+	spellname = "poison spray"
+	icon_state ="scrollred"
+
+/obj/item/book/granter/spell/spells5e/primalsavagery5e
+	name = "Scroll of Primal Savagery"
+	spell = /obj/effect/proc_holder/spell/self/primalsavagery5e
+	spellname = "primal savagery"
+	icon_state ="scrollred"
+
+/obj/item/book/granter/spell/spells5e/rayoffrost5e
+	name = "Scroll of Ray of Frost"
+	spell = /obj/effect/proc_holder/spell/invoked/projectile/rayoffrost5e
+	spellname = "ray of frost"
+	icon_state ="scrollred"

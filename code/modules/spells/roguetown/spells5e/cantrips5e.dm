@@ -461,8 +461,8 @@
 	name = "Decompose"
 	overlay_state = "null"
 	releasedrain = 50
-	chargetime = 10
-	charge_max = 60 SECONDS
+	chargetime = 5
+	charge_max = 15 SECONDS
 	//chargetime = 10
 	//charge_max = 30 SECONDS
 	range = 6
@@ -671,7 +671,7 @@
 	overlay_state = "null"
 	releasedrain = 50
 	chargetime = 1
-	charge_max = 1 SECONDS
+	charge_max = 25 SECONDS
 	//chargetime = 10
 	//charge_max = 30 SECONDS
 	range = 6
@@ -1230,7 +1230,7 @@ obj/effect/proc_holder/spell/targeted/lightninglure5e/cast(list/targets, mob/use
 /obj/effect/proc_holder/spell/invoked/mending5e/cast(list/targets, mob/living/user)
 	if(istype(targets[1], /obj/item))
 		var/obj/item/I = targets[1]
-		if(I.obj_integrity >= I.max_integrity)
+		if(I.obj_integrity >= I.max_integrity)	
 			var/repair_percent = 0.25
 			repair_percent *= I.max_integrity
 			I.obj_integrity = min(I.obj_integrity + repair_percent, I.max_integrity)
@@ -1305,6 +1305,215 @@ obj/effect/proc_holder/spell/targeted/lightninglure5e/cast(list/targets, mob/use
 	duration = 1 SECONDS
 	layer = ABOVE_ALL_MOB_LAYER
 
+//==============================================
+//	Minor Illusion
+//==============================================
+
+//==============================================
+//	Mold Earth
+//==============================================
+
+//==============================================
+//	On/Off
+//==============================================
+
+//==============================================
+//	Poison Spray
+//==============================================
+//hold a container in your hand, it's contents turn into a 3-radius smoke, more interesting than the source material
+//in the source material this would just be some sort of poison, since we have all sorts of potions, this is better.
+//my hope is that it doesn't work with love poiton...
+/obj/effect/proc_holder/spell/invoked/poisonspray5e
+	name = "Poison Spray"
+	overlay_state = "null"
+	releasedrain = 50
+	chargetime = 3
+	charge_max = 20 SECONDS
+	//chargetime = 10
+	//charge_max = 30 SECONDS
+	range = 6
+	warnie = "spellwarning"
+	movement_interrupt = FALSE
+	no_early_release = FALSE
+	chargedloop = null
+	sound = 'sound/magic/whiteflame.ogg'
+	chargedloop = /datum/looping_sound/invokegen
+	associated_skill = /datum/skill/magic/arcane //can be arcane, druidic, blood, holy
+	cost = 1
+
+	xp_gain = FALSE
+	miracle = FALSE
+
+	invocation = ""
+	invocation_type = "shout" //can be none, whisper, emote and shout
+	
+/obj/effect/proc_holder/spell/invoked/poisonspray5e/cast(list/targets, mob/living/user)
+	var/turf/T = get_turf(targets[1]) //check for turf
+	if(T)
+		var/obj/item/held_item = user.get_active_held_item() //get held item
+		var/obj/item/reagent_containers/con = held_item //get held item
+		if(con)
+			if(con.spillable)
+				if(con.reagents.total_volume > 0)
+					var/datum/reagents/R = con.reagents
+					var/datum/effect_system/smoke_spread/chem/smoke = new
+					smoke.set_up(R, 1, T, FALSE)
+					smoke.start()
+
+					user.visible_message(span_warning("[user] sprays the contents of the [held_item], creating a cloud!"), span_warning("You spray the contents of the [held_item], creating a cloud!"))
+					con.reagents.clear_reagents() //empty the container
+					playsound(user, 'sound/magic/webspin.ogg', 100)
+				else
+					to_chat(user, "<span class='warning'>The [held_item] is empty!</span>")
+					revert_cast()
+			else
+				to_chat(user, "<span class='warning'>I can't get access to the contents of this [held_item]!</span>")
+				revert_cast()
+		else
+			to_chat(user, "<span class='warning'>I need to hold a container to cast this!</span>")
+			revert_cast()
+	else
+		to_chat(user, "<span class='warning'>I couldn't find a good place for this!</span>")
+		revert_cast()
+
+
+
+//==============================================
+//	Primal Savagery
+//==============================================
+/obj/effect/proc_holder/spell/self/primalsavagery5e
+	name = "Primal Savagery"
+	desc = ""
+	clothes_req = FALSE
+	range = 8
+	overlay_state = "null"
+	sound = list('sound/magic/whiteflame.ogg')
+	active = FALSE
+
+	releasedrain = 30
+	chargedrain = 1
+	chargetime = 3
+	charge_max = 60 SECONDS //cooldown
+
+	warnie = "spellwarning"
+	no_early_release = TRUE
+	movement_interrupt = FALSE
+	antimagic_allowed = FALSE //can you use it if you are antimagicked?
+	charging_slowdown = 3
+	chargedloop = /datum/looping_sound/invokegen
+	associated_skill = /datum/skill/magic/arcane //can be arcane, druidic, blood, holy
+	cost = 1
+
+	xp_gain = FALSE
+	miracle = FALSE
+
+	invocation = ""
+	invocation_type = "shout" //can be none, whisper, emote and shout
+// Notes: Bard, Sorcerer, Warlock, Wizard
+
+/obj/effect/proc_holder/spell/self/primalsavagery5e/cast(mob/user = usr)
+	var/mob/living/target = user
+	target.apply_status_effect(/datum/status_effect/buff/primalsavagery5e)
+	ADD_TRAIT(target, TRAIT_POISONBITE, TRAIT_GENERIC)
+	user.visible_message(span_info("[user] looks more primal!"), span_info("You feel more primal."))
+
+/datum/status_effect/buff/primalsavagery5e
+	id = "primal savagery"
+	alert_type = /atom/movable/screen/alert/status_effect/buff/primalsavagery5e
+	duration = 30 SECONDS
+
+/atom/movable/screen/alert/status_effect/buff/primalsavagery5e
+	name = "Primal Savagery"
+	desc = "I have grown venomous fangs inject my victims with poison."
+	icon_state = "buff"
+
+/datum/status_effect/buff/primalsavagery5e/on_remove()
+	var/mob/living/target = owner
+	REMOVE_TRAIT(target, TRAIT_POISONBITE, TRAIT_GENERIC)
+	. = ..()
+
+
+//==============================================
+//	RAY OF FROST
+//==============================================
+// Notes: another projectile, this one slows the target for a short while
+/obj/effect/proc_holder/spell/invoked/projectile/rayoffrost5e
+	name = "Ray of Frost"
+	desc = ""
+	clothes_req = FALSE
+	range = 8
+	projectile_type = /obj/projectile/magic/rayoffrost5e
+	overlay_state = "null"
+	sound = list('sound/magic/whiteflame.ogg')
+	active = FALSE
+
+	releasedrain = 30
+	chargedrain = 1
+	chargetime = 3
+	charge_max = 5 SECONDS //cooldown
+
+	warnie = "spellwarning"
+	no_early_release = TRUE
+	movement_interrupt = FALSE
+	antimagic_allowed = FALSE //can you use it if you are antimagicked?
+	charging_slowdown = 3
+	chargedloop = /datum/looping_sound/invokegen
+	associated_skill = /datum/skill/magic/arcane //can be arcane, druidic, blood, holy
+	cost = 1
+
+	xp_gain = FALSE
+	miracle = FALSE
+
+	invocation = ""
+	invocation_type = "shout" //can be none, whisper, emote and shout
+
+
+/obj/projectile/magic/rayoffrost5e
+	name = "ray of frost"
+	icon = 'icons/obj/projectiles.dmi'
+	icon_state = "ice_2"
+	damage = 10
+	damage_type = BRUTE
+	flag = "magic"
+	range = 15
+	speed = 2
+
+/obj/projectile/magic/rayoffrost5e/on_hit(atom/target, blocked = FALSE)
+	. = ..()
+	playsound(src, 'sound/items/stonestone.ogg', 100)
+	if(isliving(target))
+		var/mob/living/carbon/C = target
+		C.apply_status_effect(/datum/status_effect/buff/rayoffrost5e/) //apply debuff
+		C.adjustFireLoss(5)
+
+/datum/status_effect/buff/rayoffrost5e
+	id = "frostbite"
+	alert_type = /atom/movable/screen/alert/status_effect/buff/rayoffrost5e
+	duration = 3 SECONDS
+	var/static/mutable_appearance/frost = mutable_appearance('icons/roguetown/mob/coldbreath.dmi', "breath_m", ABOVE_ALL_MOB_LAYER)
+	effectedstats = list("speed" = -2)
+
+/atom/movable/screen/alert/status_effect/buff/rayoffrost5e
+	name = "Frostbite"
+	desc = "I can feel myself slowing down."
+	icon_state = "debuff"
+
+/datum/status_effect/buff/rayoffrost5e/on_apply()
+	. = ..()
+	var/mob/living/target = owner
+	target.add_overlay(frost)
+	target.update_vision_cone()
+	var/newcolor = rgb(136, 191, 255)
+	target.add_atom_colour(newcolor, TEMPORARY_COLOUR_PRIORITY)
+	addtimer(CALLBACK(target, TYPE_PROC_REF(/atom, remove_atom_colour), TEMPORARY_COLOUR_PRIORITY, newcolor), 3 SECONDS)
+	target.add_movespeed_modifier(MOVESPEED_ID_ADMIN_VAREDIT, update=TRUE, priority=100, multiplicative_slowdown=4, movetypes=GROUND)
+
+/datum/status_effect/buff/rayoffrost5e/on_remove()
+	var/mob/living/target = owner
+	target.cut_overlay(frost)
+	target.update_vision_cone()
+	target.remove_movespeed_modifier(MOVESPEED_ID_ADMIN_VAREDIT, TRUE)
+	. = ..()
 /*
 XX	added
 X	added, needs work
@@ -1337,19 +1546,19 @@ XX	Magic Stone			Transmutation	1 Bonus Action	Touch				1 minute		V, S
 XX	Mending				Transmutation	1 Minute		Touch				Instantaneous	V, S, M
 SS 	Message				Transmutation	1 Action		120 feet			1 round			V, S, M
 XX	Mind Sliver			Enchantment		1 Action		60 feet				1 round			V
-	Minor Illusion		Illusion		1 Action		30 feet				1 minute		S, M
-	Mold Earth			Transmutation	1 Action		30 feet				Instantaneous	S
-	On/Off (UA)			Transmutation 	1 Action		60 feet				Instantaneous	V, S
-	Poison Spray		Conjuration		1 Action		10 feet				Instantaneous	V, S
+S	Minor Illusion		Illusion		1 Action		30 feet				1 minute		S, M
+SS	Mold Earth			Transmutation	1 Action		30 feet				Instantaneous	S
+S	On/Off (UA)			Transmutation 	1 Action		60 feet				Instantaneous	V, S
+XX	Poison Spray		Conjuration		1 Action		10 feet				Instantaneous	V, S
 SS	Prestidigitation	Transmutation	1 Action		10 feet				Up to 1 hour	V, S
-S	Primal Savagery		Transmutation	1 Action		Self				Self			S
-	Produce Flame		Conjuration		1 Action		Self				10 minutes		V, S
-	Ray of Frost		Evocation		1 Action		60 feet				Instantaneous	V, S
+XX	Primal Savagery		Transmutation	1 Action		Self				Self			S
+SS	Produce Flame		Conjuration		1 Action		Self				10 minutes		V, S
+XX	Ray of Frost		Evocation		1 Action		60 feet				Instantaneous	V, S
 	Resistance			Abjuration		1 Action		Touch				Concentration	V, S, M
 	Sacred Flame		Evocation		1 Action		60 feet				Instantaneous	V, S
 	Sapping Sting		Necromancy		1 Action		30 feet				Instantaneous	V, S
 	Shape Water			Transmutation	1 Action		30 feet				Instantaneous 	S
-	Shillelagh			Transmutation	1 Bonus Action	Touch				1 minute		V, S, M
+XX	Shillelagh			Transmutation	1 Bonus Action	Touch				1 minute		V, S, M
 	Shocking Grasp		Evocation		1 Action		Touch				Instantaneous	V, S
 S	Spare the Dying		Necromancy		1 Action		Touch				Instantaneous	V, S
 	Sword Burst			Conjuration		1 Action		Self				Instantaneous	V
