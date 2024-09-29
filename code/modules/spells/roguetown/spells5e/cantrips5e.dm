@@ -1188,13 +1188,19 @@ obj/effect/proc_holder/spell/targeted/lightninglure5e/cast(list/targets, mob/use
 /obj/effect/proc_holder/spell/invoked/magicstone5e/cast(list/targets, mob/living/user)
 	if(istype(targets[1], /obj/item/natural/stone))
 		var/obj/item/natural/stone/S = targets[1]
-		to_chat(user, "<span class='info'>[S] is infused with magical energy!</span>")
-		S.name = "magic "+S.name
-		S.force *= 1.5 //ouchy
-		S.throwforce *= 1.5 //ouchy
-		S.color = magic_color
-		var/mutable_appearance/magic_overlay = mutable_appearance('icons/effects/effects.dmi', "electricity")
-		S.add_overlay(magic_overlay)
+		if (!S.magicstone)
+			to_chat(user, "<span class='info'>[S] is infused with magical energy!</span>")
+			S.name = "magic "+S.name
+			S.force *= 1.5 //ouchy
+			S.throwforce *= 1.5 //ouchy
+			S.color = magic_color
+			S.magicstone = TRUE
+			var/mutable_appearance/magic_overlay = mutable_appearance('icons/effects/effects.dmi', "electricity")
+			//PLAY A SOUND OR SOMETHING
+			S.add_overlay(magic_overlay)
+		else
+			to_chat(user, span_warning("That stone can't get any more magical!"))
+			revert_cast()
 	else
 		to_chat(user, span_warning("There is no stone here!"))
 		revert_cast()
@@ -1514,6 +1520,37 @@ obj/effect/proc_holder/spell/targeted/lightninglure5e/cast(list/targets, mob/use
 	target.update_vision_cone()
 	target.remove_movespeed_modifier(MOVESPEED_ID_ADMIN_VAREDIT, TRUE)
 	. = ..()
+
+//==============================================
+//	RESISTANCE
+//==============================================
+//Notes: 
+
+//==============================================
+//	SACRED FLAME
+//==============================================
+//Notes: 
+
+//==============================================
+//	SAPPING STING
+//==============================================
+//Notes: a projectile that hurst rogstam
+
+//==============================================
+//	SHAPE WATER
+//==============================================
+//Notes: 
+
+//==============================================
+//	SHILLELAGH
+//==============================================
+//Notes: add your int to the force of a club or staff
+
+//==============================================
+//	SHOCKING GRASP
+//==============================================
+//Notes: shock touch spell
+
 /*
 XX	added
 X	added, needs work
@@ -1554,14 +1591,14 @@ SS	Prestidigitation	Transmutation	1 Action		10 feet				Up to 1 hour	V, S
 XX	Primal Savagery		Transmutation	1 Action		Self				Self			S
 SS	Produce Flame		Conjuration		1 Action		Self				10 minutes		V, S
 XX	Ray of Frost		Evocation		1 Action		60 feet				Instantaneous	V, S
-	Resistance			Abjuration		1 Action		Touch				Concentration	V, S, M
-	Sacred Flame		Evocation		1 Action		60 feet				Instantaneous	V, S
-	Sapping Sting		Necromancy		1 Action		30 feet				Instantaneous	V, S
-	Shape Water			Transmutation	1 Action		30 feet				Instantaneous 	S
-XX	Shillelagh			Transmutation	1 Bonus Action	Touch				1 minute		V, S, M
-	Shocking Grasp		Evocation		1 Action		Touch				Instantaneous	V, S
+SS	Resistance			Abjuration		1 Action		Touch				Concentration	V, S, M
+SS	Sacred Flame		Evocation		1 Action		60 feet				Instantaneous	V, S
+X	Sapping Sting		Necromancy		1 Action		30 feet				Instantaneous	V, S
+SS	Shape Water			Transmutation	1 Action		30 feet				Instantaneous 	S
+X	Shillelagh			Transmutation	1 Bonus Action	Touch				1 minute		V, S, M
+X	Shocking Grasp		Evocation		1 Action		Touch				Instantaneous	V, S
 S	Spare the Dying		Necromancy		1 Action		Touch				Instantaneous	V, S
-	Sword Burst			Conjuration		1 Action		Self				Instantaneous	V
+SS	Sword Burst			Conjuration		1 Action		Self				Instantaneous	V
 SS	Thaumaturgy			Transmutation	1 Action		30 feet				Up to 1 minute	V
 	Thorn Whip			Transmutation	1 Action		30 feet				Instantaneous	V, S, M
 	Thunderclap			Evocation		1 Action		Self				Instantaneous	S
