@@ -326,7 +326,7 @@
 	var/oxy_drain = 2
 	var/pleasure = 1
 	var/curprocs = 0
-	var/procsmax = 360
+	var/procsmax = 180
 	var/pleasureaccepted = FALSE
 	var/mob/living/host //who are we stuck to?
 	var/obj/item/bodypart/bodypart //where are we stuck to?
@@ -381,11 +381,11 @@
 				else //damage
 					to_chat(host, "<span class='danger'>[host] is pummeled!</span>")
 					playsound(get_turf(host), pick('sound/combat/hits/punch/punch_hard (1).ogg','sound/combat/hits/punch/punch_hard (2).ogg','sound/combat/hits/punch/punch_hard (3).ogg'), 100, FALSE, -1)
-					target.adjustBruteLoss(oxy_drain*mult*3)
+					target.adjustBruteLoss(oxy_drain*mult*2)
 			else
 				to_chat(host, "<span class='danger'>[host]'s [bodypart] is twisted!</span>")
 				playsound(get_turf(host), pick('sound/combat/hits/punch/punch (1).ogg','sound/combat/hits/punch/punch (2).ogg','sound/combat/hits/punch/punch (3).ogg'), 100, FALSE, -1)
-				target.apply_damage(oxy_drain*mult*3, BRUTE, bodypart)
+				target.apply_damage(oxy_drain*mult*2, BRUTE, bodypart)
 				bodypart.update_disabled()
 	return FALSE
 
