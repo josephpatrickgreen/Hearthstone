@@ -2,8 +2,6 @@
 #define UPGRADE_LEVEL_ONE		(1<<1)
 #define UPGRADE_LEVEL_TWO		(1<<2)
 #define UPGRADE_LEVEL_THREE		(1<<3)
-#define UPGRADE_PASSIVE_INK		(1<<4)
-#define UPGRADE_ARTIFACTS		(1<<5)
 
 /obj/structure/roguemachine/wizardvend
 	name = "PROSPERO"
@@ -17,7 +15,6 @@
 	layer = BELOW_OBJ_LAYER
 	var/list/held_items = list()
 	var/locked = FALSE
-	var/budget = 1000
 	var/upgrade_flags
 	var/current_cat = "1"
 
@@ -59,7 +56,7 @@
 		var/mana = R.get_reagent_amount(/datum/reagent/medicine/manapot)
 		if(mana > 0)
 			to_chat(user, span_notice("Added [mana] arcyne ink."))
-			budget += mana
+			SSlibrary.give_ink_library(mana, "manual insertion")
 			qdel(P)
 			update_icon()
 			playsound(loc, 'sound/misc/machinevomit.ogg', 100, TRUE, -1)
@@ -83,10 +80,11 @@
 		var/datum/supply_pack/PA = new path
 		var/cost = PA.cost
 
-		if(budget >= cost)
-			budget -= cost
+		if(SSlibrary.library_value >= cost)
+			SSlibrary.remove_ink_library(cost, "printing scroll")
+			say(wizard_vend_positive())
 		else
-			say("Not enough ink!")
+			say(wizard_vend_negative())
 			return
 
 		var/shoplength = PA.contains.len
@@ -96,28 +94,19 @@
 			var/pathi = pick(PA.contains)
 			var/obj/item/I = new pathi(get_turf(src))
 			M.put_in_hands(I)
-		//qdel(PA)
-		
-	if(href_list["change"])
-		if(budget > 0)
-			budget2change(budget, usr)
-			budget = 0
+
 	if(href_list["changecat"])
 		current_cat = href_list["changecat"]
 	if(href_list["secrets"])
 		var/list/options = list()
 		if(!(upgrade_flags & UPGRADE_CANTRIPS))
-			options += "Learn Cantrips (50)"
+			options += "Learn Cantrips (100)"
 		if(!(upgrade_flags & UPGRADE_LEVEL_ONE))
-			options += "Learn level 1 Spells (100)"
+			options += "Learn Level 1 Spells (200)"
 		if(!(upgrade_flags & UPGRADE_LEVEL_TWO))
-			options += "Learn level 2 Spells (200)"
+			options += "Learn Level 2 Spells (400)"
 		if(!(upgrade_flags & UPGRADE_LEVEL_THREE))
-			options += "Learn level 3 Spells (400)"	
-		if(!(upgrade_flags & UPGRADE_PASSIVE_INK))
-			options += "Upgrade Passive Ink Supply (800)"
-		if(!(upgrade_flags & UPGRADE_ARTIFACTS))
-			options += "Unlock Artifacts (1200)"
+			options += "Learn Level 3 Spells (800)"	
 		var/select = input(usr, "Please select an option.", "", null) as null|anything in options
 		if(!select)
 			return
@@ -125,72 +114,50 @@
 			return
 		switch(select)
 
-			if("Learn Cantrips (50)")
-				if(upgrade_flags & UPGRADE_LEVEL_ONE)
+			if("Learn Cantrips (100)")
+				if(upgrade_flags & UPGRADE_CANTRIPS)
 					return
-				if(budget < 50)
+				if(SSlibrary.library_value < 100)
 					say(wizard_vend_negative())
 					playsound(src, 'sound/misc/machinetalk.ogg', 100, FALSE, -1)
 					return
-				budget -= 50
-				upgrade_flags |= UPGRADE_LEVEL_ONE
+				SSlibrary.remove_ink_library(100, "Learn Cantrips")
+				upgrade_flags |= UPGRADE_CANTRIPS
 				playsound(loc, 'sound/misc/beep.ogg', 100, FALSE, -1)
 
-			if("Learn Level 1 Spells (100)")
+			if("Learn Level 1 Spells (200)")
 				if(upgrade_flags & UPGRADE_LEVEL_ONE)
 					return
-				if(budget < 100)
+				if(SSlibrary.library_value < 200)
 					say(wizard_vend_negative())
 					playsound(src, 'sound/misc/machinetalk.ogg', 100, FALSE, -1)
 					return
-				budget -= 100
+				SSlibrary.remove_ink_library(200, "Learn Level 1 Spells")
 				upgrade_flags |= UPGRADE_LEVEL_ONE
 				playsound(loc, 'sound/misc/beep.ogg', 100, FALSE, -1)
 
-			if("Learn Level 2 Spells (200)")
+			if("Learn Level 2 Spells (400)")
 				if(upgrade_flags & UPGRADE_LEVEL_TWO)
 					return
-				if(budget < 200)
+				if(SSlibrary.library_value < 400)
 					say(wizard_vend_negative())
 					playsound(src, 'sound/misc/machinetalk.ogg', 100, FALSE, -1)
 					return
-				budget -= 200
+				SSlibrary.remove_ink_library(400, "Learn Level 2 Spells")
 				upgrade_flags |= UPGRADE_LEVEL_TWO
 				playsound(loc, 'sound/misc/beep.ogg', 100, FALSE, -1)
 
-			if("Learn Level 3 Spells (400)")
+			if("Learn Level 3 Spells (800)")
 				if(upgrade_flags & UPGRADE_LEVEL_THREE)
 					return
-				if(budget < 400)
+				if(SSlibrary.library_value < 800)
 					say(wizard_vend_negative())
 					playsound(src, 'sound/misc/machinetalk.ogg', 100, FALSE, -1)
 					return
-				budget -= 400
+				SSlibrary.remove_ink_library(800, "Learn Level 3 Spells")
 				upgrade_flags |= UPGRADE_LEVEL_THREE
 				playsound(loc, 'sound/misc/beep.ogg', 100, FALSE, -1)
-
-			if("Upgrade Passive Ink Supply (800)")
-				if(upgrade_flags & UPGRADE_PASSIVE_INK)
-					return
-				if(budget < 800)
-					say(wizard_vend_negative())
-					playsound(src, 'sound/misc/machinetalk.ogg', 100, FALSE, -1)
-					return
-				budget -= 800
-				upgrade_flags |= UPGRADE_PASSIVE_INK
-				playsound(loc, 'sound/misc/beep.ogg', 100, FALSE, -1)
-
-			if("Unlock Artifacts (1200)")
-				if(upgrade_flags & UPGRADE_ARTIFACTS)
-					return
-				if(budget < 1200)
-					say(wizard_vend_negative())
-					playsound(src, 'sound/misc/machinetalk.ogg', 100, FALSE, -1)
-					return
-				budget -= 1200
-				upgrade_flags |= UPGRADE_ARTIFACTS
-				playsound(loc, 'sound/misc/beep.ogg', 100, FALSE, -1)
-
+	
 	return attack_hand(usr)
 
 /obj/structure/roguemachine/wizardvend/attack_hand(mob/living/user)
@@ -207,7 +174,7 @@
 	var/canread = user.can_read(src, TRUE)
 	var/contents
 	contents = "<center>PROSPERO - Arcane arts, infinite power.<BR>"
-	contents += "MANA INK: [budget]<BR>"
+	contents += "MANA INK: [SSlibrary.library_value]<BR>"
 
 	var/mob/living/carbon/human/H = user
 	if(H.job == "Court Magician" || "Magicians Apprentice")
@@ -254,7 +221,6 @@
 
 /obj/structure/roguemachine/wizardvend/obj_break(damage_flag)
 	..()
-	budget2change(budget)
 	set_light(0)
 	update_icon()
 	icon_state = "goldvendor0"
@@ -290,3 +256,24 @@ proc/wizard_vend_negative()
 		"Fill me up with thine ink~",
 		"My inkwell is as parched as a desert wanderer. Fill me up.")
 	return pick(wizard_vend_negative)
+
+proc/wizard_vend_positive()
+	var/list/wizard_vend_positive = list(
+		//normal
+		"A spell born from the cosmic tapestry, woven with the threads of arcyne energy.",
+		"The inky essence has been infused with the power of the universe itself.",
+		"Behold! A masterwork of arcyne craftsmanship.",
+		"The arcyne currents have danced upon the parchment, creating this spell of immense power.",
+		"The universe itself has smiled upon your efforts, and this spell is the result.",
+		"The inky essence has been transformed into a potent weapon of arcyne might.",
+		"My magical inkwell has revealed its true potential, and this spell is its finest creation.",
+		"A spell imbued with the essence of the cosmos, a testament to Noc herself.",
+
+		//sus
+		"My inkwell is agape for thy return.",
+		"My inky schmutz has tributed thy parchment.",
+		"That is the hardest I have ever blasted ropes of arcyne schmutz onto a parchment!",
+		"This one is almost as powerful as our connection...",
+		"Every time you use me, I feel a magical spark. Do you feel it too?",
+		"Was I too fast? This is embarassing...")
+	return pick(wizard_vend_positive)
