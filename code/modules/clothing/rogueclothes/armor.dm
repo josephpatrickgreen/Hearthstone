@@ -128,7 +128,7 @@
 		AddComponent(/datum/component/squeak, list('sound/foley/footsteps/armor/chain (1).ogg',\
 													'sound/foley/footsteps/armor/chain (2).ogg',\
 													'sound/foley/footsteps/armor/chain (3).ogg'), 70)		
-									
+
 /obj/item/clothing/suit/roguetown/armor/carapace/cuirass
 	name = "carapace cuirass"
 	desc = "vest styled watery shell chest armor sown in layers."
@@ -137,9 +137,10 @@
 	item_state = "carapacecuirass"
 	max_integrity = 150
 	equip_delay_self = 30
+
 /obj/item/clothing/suit/roguetown/armor/carapace/dragon
 	name = "dragonscale armor"
-	desc = "armor crafted from the hardened scales of a dragon."
+	desc = "armor crafted from the hardened bones of a dragon."
 	body_parts_covered = CHEST|GROIN|VITALS
 	color = "red"
 	icon_state = "carapacecuirass"
@@ -147,10 +148,12 @@
 	max_integrity = 200
 	sellprice = 50
 	armor = list("blunt" = 80, "slash" = 100, "stab" = 0, "bullet" = 100, "laser" = 0,"energy" = 0, "bomb" = 0, "bio" = 0, "rad" = 0, "fire" = 60, "acid" = 0)
+
 /obj/item/clothing/suit/roguetown/armor/carapace/dragon/cuirass
 	name = "dragonscale cuirass"
-	desc = "vest styled dragonscale chest armor sown in layers."
+	desc = "vest styled dragonbone chest armor sown in layers."
 	body_parts_covered = CHEST|GROIN|VITALS
+	color = "red"
 	icon_state = "carapacecuirass"
 	item_state = "carapacecuirass"
 	max_integrity = 175
@@ -249,14 +252,13 @@
 	smeltresult = /obj/item/ingot/steel
 	armor_class = ARMOR_CLASS_MEDIUM	
 
-/obj/item/clothing/suit/roguetown/armor/plate/bikini
+/obj/item/clothing/suit/roguetown/armor/plate/half/bikini
 	name = "plate bikini"
 	desc = "Half plate in bikini form, still just as protective somehow."
 	icon_state = "halfplatekini"
 	item_state = "halfplatekini"
 	allowed_sex = list(FEMALE)
 	anvilrepair = /datum/skill/craft/armorsmithing
-	armor_class = ARMOR_CLASS_MEDIUM
 
 /obj/item/clothing/suit/roguetown/armor/plate/full
 	name = "plate armor"
@@ -421,7 +423,6 @@
 	prevent_crits = list(BCLASS_CUT, BCLASS_STAB, BCLASS_BLUNT)
 	blocksound = SOFTHIT
 	allowed_sex = list(MALE, FEMALE)
-	allowed_race = NON_DWARVEN_RACE_TYPES
 	blade_dulling = DULLING_BASHCHOP
 	break_sound = 'sound/foley/cloth_rip.ogg'
 	drop_sound = 'sound/foley/dropsound/cloth_drop.ogg'
@@ -458,7 +459,6 @@
 	desc = "Similar to a gambeson, it is meant to be used under armor."
 	icon_state = "dgamb"
 	allowed_sex = list(MALE, FEMALE)
-	allowed_race = NON_DWARVEN_RACE_TYPES
 
 /obj/item/clothing/suit/roguetown/armor/leather
 	name = "leather armor"
@@ -574,7 +574,6 @@
 	icon_state = "nightman"
 	sleeved = 'icons/roguetown/clothing/onmob/armor.dmi'
 	allowed_sex = list(MALE, FEMALE)
-	allowed_race = NON_DWARVEN_RACE_TYPES
 
 
 /obj/item/clothing/suit/roguetown/armor/leather/vest/hand
@@ -583,7 +582,6 @@
 	icon_state = "handcoat"
 	color = null
 	allowed_sex = list(MALE, FEMALE)
-	allowed_race = NON_DWARVEN_RACE_TYPES
 
 /obj/item/clothing/suit/roguetown/armor/leather/vest/black
 	color = "#3c3a38"
