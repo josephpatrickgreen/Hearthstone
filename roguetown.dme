@@ -8,6 +8,7 @@
 // END_PREFERENCES
 // BEGIN_INCLUDE
 #include "_maps\_basemap.dm"
+#include "_maps\roguetest.dm"
 #include "_maps\templates\bog_shack_small.dm"
 #include "_maps\templates\sewers.dm"
 #include "_maps\templates\smalldungeons.dm"
@@ -1865,6 +1866,8 @@
 #include "code\modules\cargo\packsrogue\tools.dm"
 #include "code\modules\cargo\packsrogue\wardrobe.dm"
 #include "code\modules\cargo\packsrogue\weapons.dm"
+#include "code\modules\cargo\packsrogue\wizardvend\basics.dm"
+#include "code\modules\cargo\packsrogue\wizardvend\cantrips.dm"
 #include "code\modules\chatter\chatter.dm"
 #include "code\modules\client\asset_cache.dm"
 #include "code\modules\client\assets_rogue.dm"
@@ -3318,6 +3321,7 @@
 #include "code\modules\roguetown\roguemachine\titan.dm"
 #include "code\modules\roguetown\roguemachine\vendor.dm"
 #include "code\modules\roguetown\roguemachine\withdraw.dm"
+#include "code\modules\roguetown\roguemachine\wizard.dm"
 #include "code\modules\roguetown\roguestock\_roguestock.dm"
 #include "code\modules\roguetown\roguestock\bounties.dm"
 #include "code\modules\roguetown\roguestock\import.dm"
