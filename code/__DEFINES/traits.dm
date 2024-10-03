@@ -49,7 +49,8 @@
 #define TRAIT_MALUMSGRACE "Malum's Grace" // For now, just means you dont combust when snorting malum's fire.
 #define TRAIT_DEATHBYSNOOSNOO "Bed Breaker" // double sex damage (requires strong intent)
 #define TRAIT_POISONBITE "Venomous Bite" // Adds tox damage on bites
-#define TRAIT_STRONGTHROW "Strong Throw" // Adds tox damage on bites
+#define TRAIT_STRONGTHROW "Strong Throw" // 1.5x throw distance and force
+#define TRAIT_MARTIALARTIST "Martial Artist" //more unarmed combat options
 //Hearthstone end.
 
 // PATRON GOD TRAITS
@@ -146,6 +147,7 @@ GLOBAL_LIST_INIT(roguetraits, list(
 	TRAIT_DEATHBYSNOOSNOO = "It's an unlucky thing to share my bed.", // Hearthstone change
 	TRAIT_POISONBITE = "My bites inject venom into my target.", // Hearthstone change
 	TRAIT_STRONGTHROW = "My throws are mighty!", // Hearthstone change
+	TRAIT_MARTIALARTIST = "I have better kicks.", // Hearthstone change
 	TRAIT_BOG_TREKKING = "Expert in navigating these lands.", // Hearthstone change
 	TRAIT_TINY = span_info("I am tiny in size and quite fragile!"),
 ))
