@@ -140,9 +140,12 @@
 		if("College of Swords")
 			H.mind.adjust_skillrank(/datum/skill/combat/swords, 1, TRUE)
 			H.mind.adjust_skillrank(/datum/skill/combat/knives, 1, TRUE)
+			H.give_fightingstyle() //gives one fighting style 
 
 		if("College of Whispers")
 			H.mind.adjust_skillrank(/datum/skill/misc/sneaking, 2, TRUE)
+			H.mind.adjust_skillrank(/datum/skill/misc/lockpicking, 2, TRUE)
+			backpack_contents = list(/obj/item/lockpickring/mundane)
 
 	if(H.dna?.species)
 		if(iself(H) || ishalfelf(H))

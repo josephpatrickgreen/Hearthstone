@@ -92,7 +92,7 @@
 	H.mind.adjust_skillrank(/datum/skill/misc/riding, pick(1,2), TRUE)
 	H.mind.adjust_skillrank(/datum/skill/craft/engineering, 1, TRUE)
 	H.mind.adjust_skillrank(/datum/skill/misc/lockpicking, 2, TRUE)
-	head = /obj/item/clothing/head/roguetown/helmet/tricorn
+	//head = /obj/item/clothing/head/roguetown/helmet/tricorn
 	shoes = /obj/item/clothing/shoes/roguetown/boots
 	pants = /obj/item/clothing/under/roguetown/trou/leather
 	shirt = /obj/item/clothing/suit/roguetown/shirt/undershirt
@@ -102,7 +102,7 @@
 		gloves = /obj/item/clothing/gloves/roguetown/angle
 	belt = /obj/item/storage/belt/rogue/leather
 	armor = /obj/item/clothing/suit/roguetown/armor/leather
-	cloak = /obj/item/clothing/cloak/cape/black
+	cloak = /obj/item/clothing/cloak/raincloak/mortus
 	backl = /obj/item/storage/backpack/rogue/satchel
 	beltr = /obj/item/rogueweapon/sword/iron
 	beltl = /obj/item/storage/belt/rogue/pouch/coins/	
