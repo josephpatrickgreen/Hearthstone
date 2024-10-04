@@ -3364,6 +3364,7 @@
 #include "code\modules\spells\roguetown\barbarian.dm"
 #include "code\modules\spells\roguetown\bard.dm"
 #include "code\modules\spells\roguetown\confessor.dm"
+#include "code\modules\spells\roguetown\fighter.dm"
 #include "code\modules\spells\roguetown\jester.dm"
 #include "code\modules\spells\roguetown\monk.dm"
 #include "code\modules\spells\roguetown\necromancer.dm"

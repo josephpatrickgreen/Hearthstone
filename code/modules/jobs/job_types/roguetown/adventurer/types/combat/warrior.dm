@@ -1,6 +1,6 @@
 //shield sword
 /datum/advclass/sfighter
-	name = "Warrior"
+	name = "Fighter"
 	tutorial = "Warriors are well balanced fighters, skilled in blades and capable of most other weapons. \
 	they are an important member to most parties for their combat prowess, but not for much more"
 	allowed_sexes = list(MALE, FEMALE)
@@ -23,12 +23,9 @@
 			H.set_blindness(0)
 			to_chat(H, span_warning("Warriors are well rounded fighters, experienced often in many theaters of warfare and battle they are capable of rising to any challenge that might greet them on the path."))
 			H.mind.adjust_skillrank(/datum/skill/combat/crossbows, rand(2,3), TRUE)
-			H.mind.adjust_skillrank(/datum/skill/combat/polearms, 3, TRUE)
 			H.mind.adjust_skillrank(/datum/skill/combat/wrestling, 2, TRUE)
 			H.mind.adjust_skillrank(/datum/skill/combat/unarmed, 2, TRUE)
 			H.mind.adjust_skillrank(/datum/skill/misc/athletics, 4, TRUE)
-			H.mind.adjust_skillrank(/datum/skill/combat/swords, 3, TRUE)
-			H.mind.adjust_skillrank(/datum/skill/combat/maces, 3, TRUE)
 			H.mind.adjust_skillrank(/datum/skill/combat/shields, 2, TRUE)	//Bit strong but Cleric and Barb get 1 so, let him have something nice.
 			H.mind.adjust_skillrank(/datum/skill/combat/knives, rand(2,3), TRUE)
 			H.mind.adjust_skillrank(/datum/skill/misc/swimming, 1, TRUE)
@@ -61,10 +58,22 @@
 			backl = /obj/item/storage/backpack/rogue/satchel
 			backr = /obj/item/rogueweapon/shield/wood
 			beltl = /obj/item/rogueweapon/huntingknife
-			if(prob(50))
-				beltr = /obj/item/rogueweapon/sword/iron
+			if(prob(40))
+				H.mind.adjust_skillrank(/datum/skill/combat/swords, 3, TRUE)
+				H.mind.adjust_skillrank(/datum/skill/combat/polearms, 1, TRUE)
+				H.mind.adjust_skillrank(/datum/skill/combat/maces, 1, TRUE)
+				r_hand = /obj/item/rogueweapon/sword/long
+			else if(prob(60))
+				H.mind.adjust_skillrank(/datum/skill/combat/swords, 1, TRUE)
+				H.mind.adjust_skillrank(/datum/skill/combat/polearms, 3, TRUE)
+				H.mind.adjust_skillrank(/datum/skill/combat/maces, 1, TRUE)
+				r_hand = /obj/item/rogueweapon/spear/billhook
 			else
-				beltr = /obj/item/rogueweapon/sword/sabre
+				armor = /obj/item/clothing/suit/roguetown/armor/plate/scale
+				H.mind.adjust_skillrank(/datum/skill/combat/swords, 1, TRUE)
+				H.mind.adjust_skillrank(/datum/skill/combat/polearms, 1, TRUE)
+				H.mind.adjust_skillrank(/datum/skill/combat/maces, 3, TRUE)
+				r_hand = /obj/item/rogueweapon/mace
 		if("Monster Hunter")
 			H.set_blindness(0)
 			to_chat(H, span_warning("Monsters Hunters are typically contracted champions of the common folk dedicated to the slaying of both lesser vermin and greater beasts of the wilds."))
@@ -94,24 +103,113 @@
 			if(prob(40))
 				armor = /obj/item/clothing/suit/roguetown/armor/chainmail/hauberk
 				H.mind.adjust_skillrank(/datum/skill/combat/swords, 3, TRUE)
-				H.mind.adjust_skillrank(/datum/skill/combat/polearms, 2, TRUE)
-				H.mind.adjust_skillrank(/datum/skill/combat/maces, 2, TRUE)
+				H.mind.adjust_skillrank(/datum/skill/combat/polearms, 1, TRUE)
+				H.mind.adjust_skillrank(/datum/skill/combat/maces, 1, TRUE)
 				backr = /obj/item/rogueweapon/sword/long
 			else if(prob(60))
 				armor = /obj/item/clothing/suit/roguetown/armor/plate/half/iron
-				H.mind.adjust_skillrank(/datum/skill/combat/swords, 2, TRUE)
+				H.mind.adjust_skillrank(/datum/skill/combat/swords, 1, TRUE)
 				H.mind.adjust_skillrank(/datum/skill/combat/polearms, 3, TRUE)
-				H.mind.adjust_skillrank(/datum/skill/combat/maces, 2, TRUE)
+				H.mind.adjust_skillrank(/datum/skill/combat/maces, 1, TRUE)
 				r_hand = /obj/item/rogueweapon/spear/billhook
 			else
-				armor = /obj/item/clothing/suit/roguetown/armor/plate/scale // No helms for monster hunters.
-				H.mind.adjust_skillrank(/datum/skill/combat/swords, 2, TRUE)
-				H.mind.adjust_skillrank(/datum/skill/combat/polearms, 2, TRUE)
+				armor = /obj/item/clothing/suit/roguetown/armor/plate/scale
+				H.mind.adjust_skillrank(/datum/skill/combat/swords, 1, TRUE)
+				H.mind.adjust_skillrank(/datum/skill/combat/polearms, 1, TRUE)
 				H.mind.adjust_skillrank(/datum/skill/combat/axes, 3, TRUE)
 				backr = /obj/item/rogueweapon/stoneaxe/battle
 			backl = /obj/item/storage/backpack/rogue/satchel
 			beltl = /obj/item/rogueweapon/huntingknife
 	pants = /obj/item/clothing/under/roguetown/tights/black
 
+	var/list/fightingstyles = list(
+		"Dirty Fighting",
+		"Shield Master",
+		"Tavern Brawler",
+		"Unarmed Fighting",
+		"Thrown Weapon Fighting",
+		"Mariner",
+		"Martial Artist",
+		"Weapon Master",
+		"Wrestler")
+
+	var/stylechoice_one = input("Choose your first fighting style", "Available fighting styles") as anything in fightingstyles
+	fightingstyles.Remove(stylechoice_one)
+
+	var/stylechoice_two = input("Choose your second fighting style", "Available fighting styles") as anything in fightingstyles
+
+	switch(stylechoice_one)
+		if("Dirty Fighting")
+			ADD_TRAIT(H, TRAIT_NUTCRACKER, TRAIT_GENERIC)
+
+		if("Shield Master")
+			H.mind.adjust_skillrank(/datum/skill/combat/shields, 2, TRUE)
+
+		if("Tavern Brawler")
+			ADD_TRAIT(H, TRAIT_CIVILIZEDBARBARIAN, TRAIT_GENERIC)
+			
+		if("Unarmed Fighting")
+			ADD_TRAIT(H, TRAIT_PUGILIST, TRAIT_GENERIC)
+			H.mind.adjust_skillrank(/datum/skill/combat/unarmed, 2, TRUE)
+
+		if("Thrown Weapon Fighting")
+			ADD_TRAIT(H, TRAIT_STRONGTHROW, TRAIT_GENERIC)
+			H.change_stat("perception", 2)
+
+		if("Mariner")
+			H.mind.adjust_skillrank(/datum/skill/misc/climbing, 3, TRUE)
+			H.mind.adjust_skillrank(/datum/skill/misc/swimming, 3, TRUE)
+
+		if("Martial Artist")
+			ADD_TRAIT(H, TRAIT_MARTIALARTIST, TRAIT_GENERIC)
+			H.mind.adjust_skillrank(/datum/skill/combat/unarmed, 1, TRUE)
+
+		if("Weapon Master")
+			H.mind.adjust_skillrank(/datum/skill/combat/swords, 1, TRUE)
+			H.mind.adjust_skillrank(/datum/skill/combat/polearms, 1, TRUE)
+			H.mind.adjust_skillrank(/datum/skill/combat/maces, 1, TRUE)
+			H.mind.adjust_skillrank(/datum/skill/combat/axes, 1, TRUE)
+
+		if("Wrestler")
+			ADD_TRAIT(H, TRAIT_STRONG_GRABBER, TRAIT_GENERIC)
+			H.mind.adjust_skillrank(/datum/skill/combat/wrestling, 2, TRUE)
+
+	switch(stylechoice_two)
+		if("Dirty Fighting")
+			ADD_TRAIT(H, TRAIT_NUTCRACKER, TRAIT_GENERIC)
+
+		if("Shield Master")
+			H.mind.adjust_skillrank(/datum/skill/combat/shields, 2, TRUE)
+
+		if("Tavern Brawler")
+			ADD_TRAIT(H, TRAIT_CIVILIZEDBARBARIAN, TRAIT_GENERIC)
+			
+		if("Unarmed Fighting")
+			ADD_TRAIT(H, TRAIT_PUGILIST, TRAIT_GENERIC)
+			H.mind.adjust_skillrank(/datum/skill/combat/unarmed, 2, TRUE)
+
+		if("Thrown Weapon Fighting")
+			ADD_TRAIT(H, TRAIT_STRONGTHROW, TRAIT_GENERIC)
+			H.change_stat("perception", 2)
+
+		if("Mariner")
+			H.mind.adjust_skillrank(/datum/skill/misc/climbing, 3, TRUE)
+			H.mind.adjust_skillrank(/datum/skill/misc/swimming, 3, TRUE)
+
+		if("Martial Artist")
+			ADD_TRAIT(H, TRAIT_MARTIALARTIST, TRAIT_GENERIC)
+			H.mind.adjust_skillrank(/datum/skill/combat/unarmed, 1, TRUE)
+
+		if("Weapon Master")
+			H.mind.adjust_skillrank(/datum/skill/combat/swords, 1, TRUE)
+			H.mind.adjust_skillrank(/datum/skill/combat/polearms, 1, TRUE)
+			H.mind.adjust_skillrank(/datum/skill/combat/maces, 1, TRUE)
+			H.mind.adjust_skillrank(/datum/skill/combat/axes, 1, TRUE)
+
+		if("Wrestler")
+			ADD_TRAIT(H, TRAIT_STRONG_GRABBER, TRAIT_GENERIC)
+			H.mind.adjust_skillrank(/datum/skill/combat/wrestling, 2, TRUE)
+
 	ADD_TRAIT(H, TRAIT_HEAVYARMOR, TRAIT_GENERIC)
 	ADD_TRAIT(H, TRAIT_MEDIUMARMOR, TRAIT_GENERIC)
+	H.mind.AddSpell(new /obj/effect/proc_holder/spell/self/secondwind)
