@@ -459,7 +459,7 @@
 			qdel(src)
 	if(istype(K, /obj/structure/mineral_door))
 		var/obj/structure/mineral_door/KE = K
-		if(K.can_add_lock)
+		if(KE.can_add_lock)
 			if(KE.keylock == TRUE)
 				to_chat(user, span_warning("[K] already has a lock."))
 			else
