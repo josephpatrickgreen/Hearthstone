@@ -141,7 +141,7 @@
 	icon_state = "javelin"
 	icon = 'icons/roguetown/weapons/64.dmi'
 	wlength = WLENGTH_NORMAL
-	w_class = WEIGHT_CLASS_BULKY
+	w_class = WEIGHT_CLASS_NORMAL
 	slot_flags = ITEM_SLOT_BACK
 	blade_dulling = DULLING_BASHCHOP
 	walking_stick = TRUE
