@@ -184,8 +184,7 @@
 
 /obj/effect/landmark/map_load_mark/sewers_centre
 	name = "Sewers Centre Section"
-	//templates = list("sewers_centre_1", "sewers_centre_2")
-	templates = list("thieves_den_center")
+	templates = list("thieves_den_center","sewers_centre_1", "sewers_centre_2")
 
 /// Thieves' Den
 /datum/map_template/thieves_den_center //spawn only one thieves den
