@@ -119,7 +119,7 @@
 	ADD_TRAIT(H, TRAIT_NUTCRACKER, TRAIT_GENERIC) //extra damage to groin (dirty fighting)
 	H.visible_message(span_info("I trained as a swashbuckler. I have some dirty tricks under my cape."))
 
-//skilled in taking out single targets
+//skilled in taking out single targets with intrigue
 /datum/outfit/job/roguetown/adventurer/rogue/proc/assassinarch(mob/living/carbon/human/H)
 	H.mind.adjust_skillrank(/datum/skill/combat/swords, 4, TRUE)
 	H.mind.adjust_skillrank(/datum/skill/combat/crossbows, 2, TRUE)
@@ -128,17 +128,15 @@
 	H.mind.adjust_skillrank(/datum/skill/combat/wrestling, 3, TRUE)
 	H.mind.adjust_skillrank(/datum/skill/combat/unarmed, 3, TRUE)
 	H.mind.adjust_skillrank(/datum/skill/combat/knives, 4, TRUE)
-	H.mind.adjust_skillrank(/datum/skill/misc/swimming, 3, TRUE)
 	H.mind.adjust_skillrank(/datum/skill/misc/climbing, pick(5,6), TRUE)
-	H.mind.adjust_skillrank(/datum/skill/craft/crafting, 1, TRUE)
 	H.mind.adjust_skillrank(/datum/skill/misc/reading, 1, TRUE)
 	H.mind.adjust_skillrank(/datum/skill/misc/medicine, pick(0,1), TRUE)
 	H.mind.adjust_skillrank(/datum/skill/misc/sneaking, 5, TRUE)
 	H.mind.adjust_skillrank(/datum/skill/misc/stealing, 4, TRUE)
-	H.mind.adjust_skillrank(/datum/skill/craft/engineering, 3, TRUE)
+	H.mind.adjust_skillrank(/datum/skill/craft/engineering, 2, TRUE)
 	H.mind.adjust_skillrank(/datum/skill/misc/lockpicking, 3, TRUE)
-	H.mind.adjust_skillrank(/datum/skill/craft/traps, 3, TRUE)
 	H.mind.adjust_skillrank(/datum/skill/misc/tracking, 4, TRUE) //Hearthstone change.
+	H.mind.adjust_skillrank(/datum/skill/misc/alchemy, 3, TRUE)
 
 	shoes = /obj/item/clothing/shoes/roguetown/boots/hidden/poison
 	pants = /obj/item/clothing/under/roguetown/trou/leather
@@ -159,10 +157,12 @@
 	H.change_stat("perception", 2)
 	H.change_stat("speed", pick(3,4))
 	H.change_stat("intelligence", 2)
-	H.visible_message(span_info("I am an Assassin, one of the trained assassins within the local assassins' guilds which are kept hidden from most."))
+	
+	//someone who is a writer can do this. I can't think of anything
+	//H.visible_message(span_info("I am a trained assassin from the local assassins' guild,  hidden from most."))
 
 /obj/item/paper/assassin
-	info = "Assassin,<br><br>You have been equipped with the standard hidden wrist blade bracers to complete your missions. A small vial of poison is hidden in your boot in case you get captured that you may take your own life.<br><br>Destroy this parchment at your earliest convenience.<br><br>-The Guild"
+	info = "Assassin,<br><br>You have been equipped with the standard hidden wrist blade bracers to complete your missions. A small vial of poison is hidden in your boot that you may take your own life if captured.<br><br>Destroy this parchment at your earliest convenience.<br><br>-The Guild"
 
 /*
 // Arcane Trickster - A charlatan, magic using rogue (based on arcane trickster archetype from 5e)
