@@ -46,6 +46,8 @@
 	backpack_contents = list(/obj/item/restraints/legcuffs/bola, /obj/item/restraints/legcuffs/bola, /obj/item/restraints/legcuffs/bola)
 	ADD_TRAIT(H, TRAIT_DEATHBYSNOOSNOO, TRAIT_GENERIC) //doubles sex damage
 	ADD_TRAIT(H, TRAIT_STRONGTHROW, TRAIT_GENERIC) //mighty throws, javelins etc
+	ADD_TRAIT(H, TRAIT_ZJUMP, TRAIT_GENERIC) //thick thighs
+	
 	if(H.wear_mask) //for stupid idiots with bad eyes
 		var/obj/I = H.wear_mask
 		H.dropItemToGround(H.wear_mask, TRUE)
