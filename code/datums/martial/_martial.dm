@@ -77,7 +77,7 @@
 /datum/martial_art/proc/on_projectile_hit(mob/living/carbon/human/A, obj/projectile/P, def_zone)
 	var/prob2defend = A.defprob + (L.STASPD * 15)
 	var/chance = prob(prob2defend)
-	if (chance && projectile_deflect)
+	if(projectile_deflect && chance)
 		return null
 	else
 		return BULLET_ACT_HIT
