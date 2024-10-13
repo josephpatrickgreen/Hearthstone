@@ -187,7 +187,10 @@
 	var/datum/devotion/C = new /datum/devotion(H, H.patron)
 	// HEARTHSTONE ADDITION: cloistered devout devo regen & tier buff
 	if (classchoice == "Cloistered Devout")
-		C.grant_spells_devout(H)
+		if(H.patron?.type == /datum/patron/divine/noc)
+			C.grant_spells_devout_noc(H)
+		else
+			C.grant_spells_devout(H)
 	else
 		C.grant_spells_cleric(H)
 	// HEARTHSTONE ADDITION END
