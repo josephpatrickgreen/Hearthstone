@@ -160,6 +160,12 @@
 				armor = /obj/item/clothing/suit/roguetown/shirt/robe/noc
 				pants = /obj/item/clothing/under/roguetown/tights/black
 				belt = /obj/item/storage/belt/rogue/leather/black
+				if (H.mind)
+					H.mind.adjust_skillrank(/datum/skill/magic/arcane, 1, TRUE)
+					H.mind.adjust_spellpoints(1)
+					H.verbs += list(/mob/living/carbon/human/proc/magicreport, /mob/living/carbon/human/proc/magiclearn)
+					H.mind.AddSpell(new /obj/effect/proc_holder/spell/targeted/touch/prestidigitation)
+
 			if(/datum/patron/divine/necra)
 				head = /obj/item/clothing/head/roguetown/necrahood
 				armor = /obj/item/clothing/suit/roguetown/shirt/robe/necra
