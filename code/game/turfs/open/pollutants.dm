@@ -107,5 +107,9 @@
 	color = "#76b418"
 	reagents_on_breathe = list(/datum/reagent/miasmagas = 1)
 
+/datum/pollutant/horriblerot
+	color = "#e5ff00"
+	reagents_on_breathe = list(/datum/reagent/miasmagas = 5)
+
 /datum/pollutant/steam
 	color = "#ffffff"
