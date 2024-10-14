@@ -164,3 +164,51 @@
 	extra_range = 0
 
 //find familiar (imp, psuedodragon, quasit, seelie)
+/obj/effect/proc_holder/spell/self/findfamiliar
+	name = "Find Familiar"
+	desc = ""
+	overlay_state = "null"
+	sound = list('sound/magic/whiteflame.ogg')
+	active = FALSE
+
+	charge_max = 500  //2 seconds
+
+	warnie = "spellwarning"
+
+	chargedloop = /datum/looping_sound/invokegen
+	associated_skill = /datum/skill/magic/arcane //can be arcane, druidic, blood, holy
+
+	xp_gain = FALSE
+	miracle = FALSE
+
+	invocation = ""
+	invocation_type = "shout" //can be none, whisper, emote and shout
+
+	var/mob/living/fam
+
+/obj/effect/proc_holder/spell/self/findfamiliar/cast(mob/user = usr)
+	..()
+
+	var/familiars = list(
+		/mob/living/carbon/human/species/goblin/hell, //imp
+		/mob/living/simple_animal/hostile/retaliate/rogue/mossback, //psuedodragon
+		/mob/living/carbon/human/species/skeleton, //quasit(skeleton?)
+		/mob/living/simple_animal/shade //sprite
+		)
+	var/familiarchoice = input("Choose your familiar", "Available familiars") as anything in familiars
+
+	to_chat(user, span_notice("Trying to find familiar..."))
+	var/list/L = pollCandidatesForMob(
+		Question = "Do you want to play as [span_notice("[span_danger("[user.real_name]'s")] familiar")]?",
+		jobbanType = ROLE_PAI,
+		poll_time = 20 SECONDS,
+		ignore_category = POLL_IGNORE_SENTIENCE_POTION,
+	)
+	if(L.len > 0)
+		var/mob/chosen_one =  pick(L)
+		fam = new familiarchoice(user.loc)
+		fam.key = chosen_one.key
+		user.mind.RemoveSpell(/obj/effect/proc_holder/spell/self/findfamiliar)
+	else	
+		to_chat(user, span_notice("You could not find a familiar..."))
+		revert_cast()

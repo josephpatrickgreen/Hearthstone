@@ -59,14 +59,13 @@
 
 	var/boons = list( //what did you sell your faith for?
 		"strength", //Pact of the Blade
-		//"friendship", //Pact of the Chain
 		"knowledge", //Pact of the Tome
-		"love", //ring of soulbinding
-		"power", //empowered eldritch blast
 		"health", //give them healing
 		"wealth", //Pact of the Talisman
-		"purpose", //Pact of the Star Chain
-		//"revenge" //Give them curse
+		"love", //ring of soulbinding
+		"friendship", //Pact of the Chain
+		"power", //empowered eldritch blast
+		"purpose" //Pact of the Star Chain
 	)
 
 	var/boonchoice = input("What did you sell your faith for?", "Available boons") as anything in boons
@@ -77,8 +76,7 @@
 			H.change_stat("strength", 1)
 			H.set_blindness(0)
 		if("friendship") //Pact of the Chain
-			//give find familiar
-			//H.mind.AddSpell(new /obj/effect/proc_holder/spell/targeted/touch/prestidigitation)
+			H.mind.AddSpell(new /obj/effect/proc_holder/spell/self/findfamiliar)
 			H.change_stat("perception", 1)
 			H.set_blindness(0)
 		if("knowledge") //Pact of the Tome
