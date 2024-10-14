@@ -574,6 +574,28 @@
 	. = ..()
 	playsound(src, 'sound/magic/swap.ogg', 100)
 
+/obj/effect/proc_holder/spell/invoked/projectile/eldritchblast5e/empowered
+	name = "empowered eldritch blast"
+	charge_max = 8 SECONDS //cooldown
+	releasedrain = 40
+	projectile_type = /obj/projectile/magic/eldritchblast5e/empowered
+
+/obj/projectile/magic/eldritchblast5e/empowered
+	damage = 30
+	range = 25
+
+/obj/projectile/magic/eldritchblast5e/empowered/on_hit(atom/target, blocked = FALSE)
+	var/atom/throw_target = get_step(target, get_dir(firer, target))
+	if(isliving(target))
+		var/mob/living/L = target
+		if(L.anti_magic_check())
+			return BULLET_ACT_BLOCK
+		L.throw_at(throw_target, 200, 4)
+	else
+		if(isitem(target))
+			var/obj/item/I = target
+			I.throw_at(throw_target, 200, 4)
+	playsound(src, 'sound/magic/swap.ogg', 100)
 //==============================================
 //	ENCODE THOUGHTS
 //==============================================

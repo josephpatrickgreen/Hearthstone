@@ -61,10 +61,12 @@
 		"strength", //Pact of the Blade
 		//"friendship", //Pact of the Chain
 		"knowledge", //Pact of the Tome
+		//"love", //ring of soulbinding
+		"power", //empowered eldritch blast
 		"health", //give them healing
 		"wealth", //Pact of the Talisman
 		"purpose", //Pact of the Star Chain
-		"revenge" //Give them curse
+		//"revenge" //Give them curse
 	)
 
 	var/boonchoice = input("What did you sell your faith for?", "Available boons") as anything in boons
@@ -83,7 +85,16 @@
 			H.put_in_hands(givebook(patronchoice), FALSE)
 			H.change_stat("intelligence", 1)
 			H.mind.adjust_skillrank(/datum/skill/misc/reading, 2, TRUE)
-		if("health") 		
+		if("power") //empowered eldritch blast
+			H.mind.RemoveSpell(/obj/effect/proc_holder/spell/invoked/projectile/eldritchblast5e)
+			H.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/projectile/eldritchblast5e/empowered)
+			H.change_stat("intelligence", 1)
+			H.mind.adjust_skillrank(/datum/skill/magic/arcane, 1, TRUE)
+		if("love") //ring of soulbinding
+			//backpack_contents.Add(givering()) //ring of soulbinding
+			ADD_TRAIT(H, TRAIT_GOODLOVER, TRAIT_GENERIC)
+			H.set_blindness(0)
+		if("health") //make healthier
 			givehealing(H, patronchoice)
 			H.set_blindness(0)
 			H.mind.adjust_skillrank(/datum/skill/misc/medicine, 2, TRUE)
@@ -95,7 +106,7 @@
 		if("purpose") //Pact of the Star Chain
 			wrists = /obj/item/rope/chain/constellation
 			H.set_blindness(0)
-		if("revenge") 
+		if("revenge") //give curse
 			givecurse(H, patronchoice)
 			H.set_blindness(0)
 
@@ -584,7 +595,7 @@
 /obj/item/rope/chain/constellation/dropped(mob/living/user)
 	if(active_item)
 		to_chat(user, span_notice("Your purpose is scattered to the wind"))
-		
+
 		var/obj/item/organ/eyes/eyes = user.getorganslot(ORGAN_SLOT_EYES)
 		eyes.see_in_dark = 2
 		eyes.lighting_alpha = LIGHTING_PLANE_ALPHA_VISIBLE
