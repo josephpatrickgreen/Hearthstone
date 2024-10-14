@@ -500,6 +500,7 @@
 	item = new item_type
 	item.AddComponent(/datum/component/pact_weapon, H, patronchoice)
 	item.AddComponent(/datum/component/singing_item, H)
+	item.AddComponent(/datum/component/spirit_holding, null, null)
 	return item
 
 ///////////////////////////////

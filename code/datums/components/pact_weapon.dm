@@ -41,7 +41,11 @@
 		var/obj/item/item
 		item = new weaponchoice
 		item.AddComponent(/datum/component/pact_weapon, weapon_owner, patronchoice)
-		item.TakeComponent(parent.GetComponent(/datum/component/singing_item))
+		item.AddComponent(/datum/component/singing_item, parent.GetComponent(/datum/component/singing_item).weapon_owner, parent.GetComponent(/datum/component/singing_item).personality)
+		var/datum/mind/soul_to_bind = null
+		if(parent.GetComponent(/datum/component/spirit_holding).bound_spirit)
+			soul_to_bind = parent.GetComponent(/datum/component/spirit_holding).bound_spirit.mind
+		item.AddComponent(/datum/component/spirit_holding, soul_to_bind, target)
 		weapon_owner.put_in_hands(item, FALSE)
 		qdel(parent)
 	else
