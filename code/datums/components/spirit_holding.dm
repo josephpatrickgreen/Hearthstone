@@ -77,7 +77,6 @@
 		to_chat(awakener, span_notice("The weapon is silent..."))
 		attempting_awakening = FALSE
 		return
-	to_chat(awakener, "somehow there is in fact a mob?")
 
 	// Immediately unregister to prevent making a new spirit
 	UnregisterSignal(parent, COMSIG_ITEM_ATTACK_SELF)
@@ -94,7 +93,7 @@
 	// Now that all of the important things are in place for our spirit, it's time for them to choose their name.
 	var/valid_input_name = custom_name(awakener)
 	if(valid_input_name)
-		bound_spirit.fully_replace_character_name(null, "The spirit of [valid_input_name]")
+		bound_spirit.fully_replace_character_name(null, "[valid_input_name]")
 
 /datum/component/spirit_holding/proc/bind_the_soule(datum/mind/chosen_spirit, mob/awakener, name_override)
 	bound_spirit = new(parent)

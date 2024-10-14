@@ -208,7 +208,23 @@
 		var/mob/chosen_one =  pick(L)
 		fam = new familiarchoice(user.loc)
 		fam.key = chosen_one.key
+		to_chat(user, span_notice("Your familiar appears..."))
+		chosen_one.mind.transfer_to(fam)
+		fam.fully_replace_character_name(null, "[user]'s familiar")
+		fam.get_language_holder().omnitongue = TRUE //Grants omnitongue
+		var/valid_input_name = custom_name(user)
+		if(valid_input_name)
+			fam.fully_replace_character_name(null, "[valid_input_name]")
 		user.mind.RemoveSpell(/obj/effect/proc_holder/spell/self/findfamiliar)
 	else	
 		to_chat(user, span_notice("You could not find a familiar..."))
 		revert_cast()
+
+/obj/effect/proc_holder/spell/self/findfamiliar/proc/custom_name(mob/awakener, var/mob/chosen_one, iteration = 1)
+	if(iteration > 5)
+		return "indecision" // The spirit of indecision
+	var/chosen_name = sanitize_name(stripped_input(chosen_one, "What are you named?"))
+	if(!chosen_name) // with the way that sanitize_name works, it'll actually send the error message to the awakener as well.
+		to_chat(awakener, span_warning("Your weapon did not select a valid name! Please wait as they try again.")) // more verbose than what sanitize_name might pass in it's error message
+		return custom_name(awakener, iteration++)
+	return chosen_name
