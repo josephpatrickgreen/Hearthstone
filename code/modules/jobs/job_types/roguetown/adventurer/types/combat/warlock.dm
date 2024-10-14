@@ -94,9 +94,6 @@
 			H.set_blindness(0)
 		if("purpose") //Pact of the Star Chain
 			wrists = /obj/item/rope/chain/constellation
-			var/obj/item/organ/eyes/eyes = H.getorganslot(ORGAN_SLOT_EYES)
-			eyes = new /obj/item/organ/eyes/night_vision/nightmare //devil's sight
-			eyes.Insert(H)
 			H.set_blindness(0)
 		if("revenge") 
 			givecurse(H, patronchoice)
@@ -571,6 +568,14 @@
 		return
 	else
 		active_item = TRUE
+
+		var/obj/item/organ/eyes/eyes = user.getorganslot(ORGAN_SLOT_EYES)
+		eyes.see_in_dark = 8
+		eyes.lighting_alpha = LIGHTING_PLANE_ALPHA_MOSTLY_INVISIBLE
+		eyes.sight_flags = initial(eyes.sight_flags)
+		eyes.sight_flags &= ~SEE_BLACKNESS
+		eyes.owner.update_sight()
+
 		to_chat(user, span_notice("Your purpose seems clearer now"))
 		user.change_stat("intelligence", 1)
 		user.change_stat("fortune", 1)
@@ -579,6 +584,13 @@
 /obj/item/rope/chain/constellation/dropped(mob/living/user)
 	if(active_item)
 		to_chat(user, span_notice("Your purpose is scattered to the wind"))
+		
+		var/obj/item/organ/eyes/eyes = user.getorganslot(ORGAN_SLOT_EYES)
+		eyes.see_in_dark = 2
+		eyes.lighting_alpha = LIGHTING_PLANE_ALPHA_VISIBLE
+		eyes.sight_flags = 0
+		eyes.owner.update_sight()
+
 		user.change_stat("intelligence", -1)
 		user.change_stat("fortune", -1)
 		active_item = FALSE
