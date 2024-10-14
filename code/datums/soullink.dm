@@ -98,6 +98,12 @@
 	if(soulsharer)
 		soulsharer.dust(FALSE)
 
+/datum/soullink/oneway/delay/ownerDies(gibbed, mob/living/owner)
+	if(soulsharer)
+		to_chat(soulsharer, span_danger("Your soullink has died. Say your goodbyes."))
+		sleep(30 SECONDS)
+		soulsharer.dust(FALSE)
+
 
 /////////////////
 // SHARED BODY //

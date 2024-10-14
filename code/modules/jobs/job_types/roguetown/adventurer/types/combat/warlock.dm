@@ -623,19 +623,17 @@
 	name = "Soulbond Ring"
 	desc = "A ring that bonds two together eternally."
 
-/obj/item/clothing/ring/diamond/soulbond/Initialize()
-	. = ..()
-	ADD_TRAIT(src, TRAIT_NODROP, TRAIT_GENERIC)
-
 /obj/item/clothing/ring/diamond/soulbond/equipped(mob/living/user, slot)
 	. = ..()
-	if(slot == ITEM_SLOT_RING)
+	if(slot == SLOT_RING)
 		if(user == item_owner)
 			to_chat(user, span_warning("You feel lonely. This is meant to go on someone else."))
 		else
+			ADD_TRAIT(src, TRAIT_NODROP, TRAIT_GENERIC)
 			to_chat(item_owner, span_warning("[user]'s life force is tied directly to yours."))
 			to_chat(user, span_warning("Your lifeforce is linked to [item_owner]'s."))
-			user.AddComponent(/datum/soullink/oneway, item_owner, user)
+			soullink(/datum/soullink/oneway/delay, item_owner, user)
 
 /obj/item/clothing/ring/diamond/soulbond/dropped(mob/living/user)
 	qdel(user.GetComponent(/datum/soullink/oneway))
+	REMOVE_TRAIT(src, TRAIT_NODROP, TRAIT_GENERIC)
