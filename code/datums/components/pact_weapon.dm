@@ -41,6 +41,7 @@
 		var/obj/item/item
 		item = new weaponchoice
 		item.AddComponent(/datum/component/pact_weapon, weapon_owner, patronchoice)
+		item.TakeComponent(parent.GetComponent(/datum/component/singing_item))
 		weapon_owner.put_in_hands(item, FALSE)
 		qdel(parent)
 	else

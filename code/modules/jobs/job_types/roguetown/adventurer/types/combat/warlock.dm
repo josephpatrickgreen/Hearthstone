@@ -499,6 +499,7 @@
 	var/obj/item/item
 	item = new item_type
 	item.AddComponent(/datum/component/pact_weapon, H, patronchoice)
+	item.AddComponent(/datum/component/singing_item, H)
 	return item
 
 ///////////////////////////////
