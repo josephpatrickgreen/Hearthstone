@@ -205,6 +205,9 @@ GLOBAL_VAR_INIT(rpg_loot_items, FALSE)
 	//is it an improvised weapon?
 	var/improvised = FALSE
 
+	//make my life easier... -ham
+	var/mob/living/item_owner
+
 /obj/item/Initialize()
 	. = ..()
 	if(!pixel_x && !pixel_y && !bigboy)

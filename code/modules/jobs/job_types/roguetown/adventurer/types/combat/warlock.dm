@@ -61,7 +61,7 @@
 		"strength", //Pact of the Blade
 		//"friendship", //Pact of the Chain
 		"knowledge", //Pact of the Tome
-		//"love", //ring of soulbinding
+		"love", //ring of soulbinding
 		"power", //empowered eldritch blast
 		"health", //give them healing
 		"wealth", //Pact of the Talisman
@@ -91,7 +91,7 @@
 			H.change_stat("intelligence", 1)
 			H.mind.adjust_skillrank(/datum/skill/magic/arcane, 1, TRUE)
 		if("love") //ring of soulbinding
-			//backpack_contents.Add(givering()) //ring of soulbinding
+			H.put_in_hands(givering(H))
 			ADD_TRAIT(H, TRAIT_GOODLOVER, TRAIT_GENERIC)
 			H.set_blindness(0)
 		if("health") //make healthier
@@ -608,3 +608,34 @@
 		user.change_stat("fortune", -1)
 		active_item = FALSE
 		return
+
+///////////////////////////////
+//	Soulbond Ring
+///////////////////////////////
+/datum/outfit/job/roguetown/adventurer/warlock/proc/givering(mob/living/carbon/human/H)
+	var/item_type = /obj/item/clothing/ring/diamond/soulbond
+	var/obj/item/item
+	item = new item_type
+	item.item_owner = H
+	return item
+
+/obj/item/clothing/ring/diamond/soulbond
+	name = "Soulbond Ring"
+	desc = "A ring that bonds two together eternally."
+
+/obj/item/clothing/ring/diamond/soulbond/Initialize()
+	. = ..()
+	ADD_TRAIT(src, TRAIT_NODROP, TRAIT_GENERIC)
+
+/obj/item/clothing/ring/diamond/soulbond/equipped(mob/living/user, slot)
+	. = ..()
+	if(slot == ITEM_SLOT_RING)
+		if(user == item_owner)
+			to_chat(user, span_warning("You feel lonely. This is meant to go on someone else."))
+		else
+			to_chat(item_owner, span_warning("[user]'s life force is tied directly to yours."))
+			to_chat(user, span_warning("Your lifeforce is linked to [item_owner]'s."))
+			user.AddComponent(/datum/soullink/oneway, item_owner, user)
+
+/obj/item/clothing/ring/diamond/soulbond/dropped(mob/living/user)
+	qdel(user.GetComponent(/datum/soullink/oneway))
