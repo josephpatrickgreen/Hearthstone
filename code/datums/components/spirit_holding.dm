@@ -59,20 +59,25 @@
 		return
 	attempting_awakening = TRUE
 	to_chat(user, span_notice("channeling..."))
-	var/mob/chosen_one =  pollGhostCandidates(
+	var/list/L = pollCandidatesForMob(
 		Question = "Do you want to play as [span_notice("Spirit of [span_danger("[user.real_name]'s")] weapon")]?",
 		jobbanType = ROLE_PAI,
 		poll_time = 20 SECONDS,
 		ignore_category = POLL_IGNORE_POSSESSED_BLADE,
 	)
-	affix_spirit(user, chosen_one)
+	if(L.len > 0)
+		var/mob/chosen_one =  pick(L)
+		affix_spirit(user, chosen_one)
+	else	
+		to_chat(user, span_notice("The weapon is silent..."))
 
 /// On conclusion of the ghost poll
-/datum/component/spirit_holding/proc/affix_spirit(mob/awakener, mob/dead/observer/ghost)
-	if(!ghost)
+/datum/component/spirit_holding/proc/affix_spirit(mob/awakener, mob/ghost)
+	if(!ghost || isnull(ghost))
 		to_chat(awakener, span_notice("The weapon is silent..."))
 		attempting_awakening = FALSE
 		return
+	to_chat(awakener, "somehow there is in fact a mob?")
 
 	// Immediately unregister to prevent making a new spirit
 	UnregisterSignal(parent, COMSIG_ITEM_ATTACK_SELF)
