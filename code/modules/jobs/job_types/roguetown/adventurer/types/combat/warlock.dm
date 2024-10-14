@@ -16,7 +16,6 @@
 
 	if(H.mind)
 		H.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/projectile/eldritchblast5e)
-		if(H.mind)
 		H.mind.adjust_skillrank(/datum/skill/misc/athletics, 1, TRUE)
 		H.mind.adjust_skillrank(/datum/skill/misc/medicine, pick(0,1), TRUE)
 		H.mind.adjust_skillrank(/datum/skill/misc/reading, 2, TRUE)
@@ -436,6 +435,7 @@
 		user.mind.AddSpell(new spell1)
 		user.mind.AddSpell(new spell2)
 		user.mind.AddSpell(new spell3)
+		user.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/message)
 		return
 
 /obj/item/book/rogue/eldritch/dropped(mob/living/user)
@@ -445,6 +445,7 @@
 		user.mind.RemoveSpell(spell1)
 		user.mind.RemoveSpell(spell2)
 		user.mind.RemoveSpell(spell3)
+		user.mind.RemoveSpell(/obj/effect/proc_holder/spell/invoked/message)
 		active_item = FALSE
 		return
 
@@ -489,15 +490,7 @@
 		
 	var/obj/item/item
 	item = new item_type
-	item.name += " of the [patronchoice]"
-	item.desc += " It is enchanted to use arcane skill rather than it's regular skill"
-	item.force *= 1.2
-	item.max_blade_int *= 1.2
-	item.max_integrity *= 1.2
-	item.minstr = 1
-	item.associated_skill = /datum/skill/magic/arcane
-	//var/mutable_appearance/magic_overlay = mutable_appearance('icons/effects/effects.dmi', "electricity")
-	//item.add_overlay(magic_overlay)
+	item.AddComponent(/datum/component/pact_weapon, H, patronchoice)
 	return item
 
 ///////////////////////////////

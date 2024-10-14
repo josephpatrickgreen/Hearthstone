@@ -64,7 +64,7 @@
 	miracle = FALSE
 	var/patronname = ""
 	var/datum/status_effect/buff/eldritchcurse/curse
-	
+
 /obj/effect/proc_holder/spell/invoked/eldritchcurse/cast(list/targets, mob/living/user)
 	if(isliving(targets[1]))
 		var/mob/living/carbon/target = targets[1]
@@ -155,7 +155,7 @@
 		soundloop.start()
 	var/turf/open/T = get_turf(L)
 	if(istype(T))
-		T.add_pollutants(/datum/pollutant/horriblerot, 10)
+		T.add_pollutants(/datum/pollutant/flies, 10)
 
 /datum/looping_sound/fliesloop/quiet
 	mid_sounds = list('sound/misc/fliesloop.ogg')
