@@ -53,6 +53,7 @@
 #define TRAIT_MARTIALARTIST "Martial Artist" //more unarmed combat options
 #define TRAIT_PUGILIST "Pugilist" //more punch damage
 #define TRAIT_WILDMAGIC "Wild Magic" //low chance for insane stuff to happen when casting
+#define TRAIT_FIENDKISS "Kiss of the Fiend" //after casting some spells, hurl a firebolt at the same location
 //Hearthstone end.
 
 // PATRON GOD TRAITS
@@ -152,6 +153,7 @@ GLOBAL_LIST_INIT(roguetraits, list(
 	TRAIT_MARTIALARTIST = "I have better kicks.", // Hearthstone change
 	TRAIT_PUGILIST = "I have stronger punches.", // Hearthstone change
 	TRAIT_WILDMAGIC = "My magic sometimes has unexpected consequences.", // Hearthstone change
+	TRAIT_FIENDKISS = "When I cast projectile magic, the fiend also hurls a fire bolt at the same location.", // Hearthstone change
 	TRAIT_BOG_TREKKING = "Expert in navigating these lands.", // Hearthstone change
 	TRAIT_TINY = span_info("I am tiny in size and quite fragile!"),
 ))

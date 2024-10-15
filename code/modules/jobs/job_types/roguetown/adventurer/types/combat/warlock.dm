@@ -32,7 +32,7 @@
 		"archfey", //a great seelie | utility | seelie spells
 		"celestial", //a celestial being | utility | faithless healer
 		"fathomless", //a creecher from the depths of the sea | melee combat | medium armor | water themed
-		//"fiend", //caster
+		"fiend", //caster
 		"genie", //a spirit trapped in an item | utility | specialty gear 
 		"great old one", //your typical lovecraftian creecher | caster | magic tab
 		"hexblade", //a sentient weapon | melee combat | medium armor | specialty gear
@@ -196,13 +196,28 @@
 
 	H.visible_message(span_info("I made a deal with a fathomless creecher of the sea."))
 
-/datum/outfit/job/roguetown/adventurer/warlock/proc/fiendpatron(mob/living/carbon/human/H, patronchoice)
+/datum/outfit/job/roguetown/adventurer/warlock/proc/fiendpatron(mob/living/carbon/human/H, patronchoice) //hellish fiend
+	H.mind.adjust_skillrank(/datum/skill/misc/reading, 2, TRUE)
+	H.mind.adjust_skillrank(/datum/skill/misc/alchemy, 2, TRUE)
+	H.mind.adjust_skillrank(/datum/skill/magic/arcane, 2, TRUE)
+		
+	head = /obj/item/clothing/head/roguetown/roguehood/red
+	mask = /obj/item/clothing/mask/rogue/goldmask
+	armor = /obj/item/clothing/suit/roguetown/shirt/robe/magered
+	back = /obj/item/clothing/cloak/raincloak/red
+	r_hand = /obj/item/rogueweapon/woodstaff
+	beltr = /obj/item/storage/belt/rogue/pouch/coins/poor
+	belt = /obj/item/storage/belt/rogue/leather/rope
+	beltl = /obj/item/rogueweapon/huntingknife
+	shoes = /obj/item/clothing/shoes/roguetown/simpleshoes
+	
 	//caster stats (must be 5 stat point total)
 	H.change_stat("intelligence", 2)
 	H.change_stat("perception", 2)
 	H.change_stat("constitution", 1)
 
 	ADD_TRAIT(H, TRAIT_NOFIRE, TRAIT_GENERIC)
+	ADD_TRAIT(H, TRAIT_FIENDKISS, TRAIT_GENERIC)
 
 	H.visible_message(span_info("I made a deal with a fiend from the hells."))
 	
