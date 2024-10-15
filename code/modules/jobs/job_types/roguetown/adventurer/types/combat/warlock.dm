@@ -4,16 +4,18 @@
 	gaining supernatural powers in exchange for their faith or other significant sacrifice. \
 	Their powers are derived from sources beyond mortal understanding and are often associated with dark magic and forbidden knowledge."
 	allowed_sexes = list(MALE, FEMALE)
-	allowed_races = RACES_ALL_KINDS
-	//allowed_patrons = FAITHLESS
+	allowed_races = RACES_ALL_KINDS	
 	outfit = /datum/outfit/job/roguetown/adventurer/warlock
 	//traits_applied = list(TRAIT_DODGEEXPERT)
 	category_tags = list(CTAG_ADVENTURER)
-	
+
+/datum/outfit/job/roguetown/adventurer/warlock
+	allowed_patrons = list(/datum/patron/godless)
+
 /datum/outfit/job/roguetown/adventurer/warlock/pre_equip(mob/living/carbon/human/H)
 	..()
+	
 	H.adjust_blindness(-3)
-
 	if(H.mind)
 		H.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/projectile/eldritchblast5e)
 		H.mind.adjust_skillrank(/datum/skill/misc/athletics, 1, TRUE)
