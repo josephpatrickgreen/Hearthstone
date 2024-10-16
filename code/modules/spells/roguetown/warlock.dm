@@ -1,4 +1,6 @@
 // Eldritch faithless healing
+/obj/effect/proc_holder/spell/invoked/eldritchhealing/any
+
 /obj/effect/proc_holder/spell/invoked/eldritchhealing
 	name = "Eldritch Healing"
 	overlay_state = null
@@ -18,14 +20,16 @@
 	var/patronname = ""
 	var/targetnotification = ""
 	var/othernotification = ""
+	var/ignore_faithless = FALSE
 
 /obj/effect/proc_holder/spell/invoked/eldritchhealing/cast(list/targets, mob/living/user)
 	. = ..()
 	if(isliving(targets[1]))
 		var/mob/living/target = targets[1]
-		if(!HAS_TRAIT(target, TRAIT_FAITHLESS)) //how do you like it?
-			to_chat(user, span_warning("The [patronname] refuses to aid a believer in the divine or inhumen - They should ask their own |GOD| for help."))
-			return FALSE
+		if(!ignore_faithless)
+			if(!HAS_TRAIT(target, TRAIT_FAITHLESS)) //how do you like it?
+				to_chat(user, span_warning("The [patronname] refuses to aid a believer in the divine or inhumen - They should ask their own |GOD| for help."))
+				return FALSE
 
 		target.visible_message(span_info("[target] "+othernotification), span_notice(targetnotification))
 		if(iscarbon(target))

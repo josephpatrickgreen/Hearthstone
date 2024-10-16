@@ -155,7 +155,7 @@
 	H.change_stat("perception", 2)
 	H.change_stat("constitution", 1)
 
-	givehealing(H, patronchoice)
+	givehealing(H, patronchoice, TRUE)
 
 	H.visible_message(span_info("I made a deal with a celestial being from the heavens."))
 
@@ -363,8 +363,10 @@
 //	Faithless Healing
 ///////////////////////////////
 
-/datum/outfit/job/roguetown/adventurer/warlock/proc/givehealing(mob/living/carbon/human/H, patronname = "")
+/datum/outfit/job/roguetown/adventurer/warlock/proc/givehealing(mob/living/carbon/human/H, patronname = "", ignore_faithless = FALSE)
 	var/obj/effect/proc_holder/spell/invoked/eldritchhealing/eldritchhealing = new /obj/effect/proc_holder/spell/invoked/eldritchhealing
+	if(ignore_faithless)
+		eldritchhealing.ignore_faithless = TRUE
 	eldritchhealing.patronname = patronname
 	switch(patronname) //god damn put this in a datum or something....
 		if("archfey")
