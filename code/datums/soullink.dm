@@ -102,8 +102,15 @@
 	if(soulsharer)
 		to_chat(soulsharer, span_danger("Your soullink has died. Say your goodbyes."))
 		sleep(30 SECONDS)
-		soulsharer.dust(FALSE)
-
+		var/mob/living/carbon/C = soulsharer
+		C.set_heartattack(TRUE)
+		to_chat(soulsharer, span_danger("I feel a stabbing pain in my heart!"))
+		sleep(10 SECONDS)
+		//spew their heart
+		var/obj/item/organ/heart/heart = soulsharer.getorganslot(ORGAN_SLOT_HEART)
+		var/turf/T = get_turf(get_turf(soulsharer))
+		heart.Remove(soulsharer)
+		heart.forceMove(T)
 
 /////////////////
 // SHARED BODY //
