@@ -208,6 +208,9 @@ GLOBAL_VAR_INIT(rpg_loot_items, FALSE)
 	//make my life easier... -ham
 	var/mob/living/item_owner
 
+	//can you infuse this item magically?
+	var/infusable = TRUE
+
 /obj/item/Initialize()
 	. = ..()
 	if(!pixel_x && !pixel_y && !bigboy)

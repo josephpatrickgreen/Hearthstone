@@ -1,5 +1,6 @@
 // Eldritch faithless healing
 /obj/effect/proc_holder/spell/invoked/eldritchhealing/any
+	ignore_faithless = TRUE
 
 /obj/effect/proc_holder/spell/invoked/eldritchhealing
 	name = "Eldritch Healing"
