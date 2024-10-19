@@ -102,7 +102,7 @@
 		)
 	
 	var/instrument_infusions = list(
-		//"haunting", 
+		"haunting", 
 		"the sewers", //gain summon rous spell XX
 		)
 
@@ -209,8 +209,10 @@
 /datum/component/infusions/proc/blocked(obj/item/source, mob/living/carbon/human/owner, atom/movable/hitby, attack_text = "the projectile", final_block_chance = 0, damage = 0, attack_type = MELEE_ATTACK)
 
 /datum/component/infusions/proc/throw_impact(obj/item/source, atom/hit_atom, datum/thrownthing/throwingdatum)
-		var/mob/living/carbon/human/H = throwingdatum.thrower
-		returnToOwner(source, H, 0, 1)
+	switch(infusion_name)
+		if("returning")
+			var/mob/living/carbon/human/H = throwingdatum.thrower
+			returnToOwner(source, H, 0, 1)
 
 /datum/component/infusions/proc/returnToOwner(obj/item/source, mob/living/carbon/human/user, caught = 0)
 	if(!istype(user))
@@ -341,6 +343,7 @@
 
 		if("the sewers")
 			user.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/summon_rat)
+			user.mind.AddSpell(new /obj/effect/proc_holder/spell/targeted/roustame)
 
 		if("climbing")
 			user.mind.adjust_skillrank(/datum/skill/misc/climbing, 3, TRUE)
@@ -460,6 +463,7 @@
 
 		if("the sewers")
 			user.mind.RemoveSpell(/obj/effect/proc_holder/spell/invoked/summon_rat)
+			user.mind.RemoveSpell(/obj/effect/proc_holder/spell/targeted/roustame)
 
 		if("climbing")
 			user.mind.adjust_skillrank(/datum/skill/misc/climbing, -3, TRUE)
