@@ -179,6 +179,10 @@
 			var/obj/item/natural/stone/sending/item2 = new /obj/item/natural/stone/sending
 			item1.paired_with = item2
 			item2.paired_with = item1
+			item1.icon_state = "whet"
+			item2.icon_state = "whet"
+			item1.color = "#d8aeff"
+			item2.color = "#d8aeff"
 			user.put_in_hands(item1, FALSE)
 			user.put_in_hands(item2, FALSE)
 			qdel(parent)
@@ -603,3 +607,9 @@
 	desc = "One of a pair of sending stones."
 	infusable = FALSE
 	var/obj/item/natural/stone/sending/paired_with
+
+/obj/item/natural/stone/sending/attack_self(mob/user)
+	user.changeNext_move(CLICK_CD_MELEE)
+	var/input_text = input(user, "Enter your message:", "Message")
+	if(input_text)
+		paired_with.say(input_text)
