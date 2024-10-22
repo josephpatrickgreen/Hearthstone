@@ -570,7 +570,66 @@
 	name = "alchemy jug"
 	desc = "An enchanted jug that fills itself with liquids."
 	infusable = FALSE
+	var/fill_per_minute = 15
+	var/reagent = /datum/reagent/water
+	var/wait = 0
 	
+/obj/item/reagent_containers/glass/bottle/alchemyjug/Initialize()
+	START_PROCESSING(SSobj, src)
+	. = ..()
+
+/obj/item/reagent_containers/glass/bottle/alchemyjug/process()
+	wait++
+	if(wait >= 30) //SSobj processes once ever 2 seconds so after a minute
+		wait = 0 //reset timer
+		if(src.reagents.holder_full())
+			return
+		playsound(src, 'sound/foley/drawwater.ogg', 100, FALSE)
+		var/list/L = list()
+		L[reagent] = fill_per_minute
+		src.reagents.add_reagent_list(L)
+/obj/item/reagent_containers/glass/bottle/alchemyjug/attack_self(mob/user)
+	var/list/options = list(
+		/datum/reagent/water, //fresh water
+		/datum/reagent/water/gross, //salt water: analog for saltwater
+		/datum/reagent/consumable/ethanol/beer, //beer
+		/datum/reagent/consumable/ethanol/beer/wine, //wine
+		/datum/reagent/consumable/ethanol/beer/cider, //cider: original addition
+		/datum/reagent/consumable/honey, //honey
+		/datum/reagent/consumable/lemonade, //lemonade: 
+		/datum/reagent/consumable/mayonnaise, // mayonaise (maybe change to just egg yolk)
+		/datum/reagent/fuel/oil, //oil
+		/datum/reagent/berrypoison, //basic poison
+		/datum/reagent/toxin/acid/fluacid //acid
+		)
+	var/reagent_change = input("Choose Contents", "Available Liquids") as anything in options
+	reagent = reagent_change
+	wait = 15
+	reagents.total_volume = 0
+	switch(reagent_change)
+		if(/datum/reagent/water)
+			fill_per_minute = 30
+		if(/datum/reagent/water/gross)
+			fill_per_minute = 45
+		if(/datum/reagent/consumable/ethanol/beer)
+			fill_per_minute = 15
+		
+		if(/datum/reagent/consumable/ethanol/beer/wine)
+			fill_per_minute = 7.5
+		if(/datum/reagent/consumable/ethanol/beer/cider)
+			fill_per_minute = 7.5
+		if(/datum/reagent/consumable/honey)
+			fill_per_minute = 3.25
+		if(/datum/reagent/consumable/lemonade)
+			fill_per_minute = 15
+		if(/datum/reagent/consumable/mayonnaise)
+			fill_per_minute = 7.5
+		if(/datum/reagent/fuel/oil)
+			fill_per_minute = 3.25
+		if(/datum/reagent/berrypoison)
+			fill_per_minute = 3.25
+		if(/datum/reagent/toxin/acid/fluacid)
+			fill_per_minute = 1
 //eyes of the eagle
 /obj/item/organ/eyes/eagle
 	name = "eyes of the eagle" //make these eyes give you +3 perception
@@ -613,7 +672,6 @@
 	var/obj/item/natural/stone/sending/paired_with
 
 /obj/item/natural/stone/sending/attack_self(mob/user)
-	user.changeNext_move(CLICK_CD_MELEE)
 	var/input_text = input(user, "Enter your message:", "Message")
 	if(input_text)
 		paired_with.say(input_text)
