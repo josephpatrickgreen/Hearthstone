@@ -1420,8 +1420,9 @@
 	attack_verb = list("attacked", "slashed", "stabbed", "sliced", "torn", "ripped", "diced", "cut", "gutted", "gored")
 	// sharpness = SHARP_EDGED
 	resistance_flags = INDESTRUCTIBLE | LAVA_PROOF | FIRE_PROOF | UNACIDABLE | ACID_PROOF
-	var/active_item
+	infusable = FALSE
 	attunement_cost = 5
+	var/active_item
 
 /obj/item/melee/sword_of_the_forsaken/equipped(mob/living/user)
 	. = ..()
@@ -1471,6 +1472,7 @@
 	actions_types = list(/datum/action/item_action/hands_free/necklace_of_the_forsaken)
 	resistance_flags = INDESTRUCTIBLE | LAVA_PROOF | FIRE_PROOF | UNACIDABLE | ACID_PROOF
 	attunement_cost = 5
+	infusable = FALSE
 	var/mob/living/carbon/active_owner
 	var/numUses = 1
 	var/active_item

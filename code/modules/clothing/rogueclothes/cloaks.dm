@@ -942,8 +942,10 @@
 	resistance_flags = FIRE_PROOF
 	sellprice = 666
 	static_price = TRUE
-	var/active_item = FALSE
 	attunement_cost = 5
+	infusable = FALSE
+	var/active_item = FALSE
+	
 
 /obj/item/clothing/neck/roguetown/blkknight/equipped(mob/living/user)
 	. = ..()

@@ -250,6 +250,7 @@
 	sellprice = 363
 	static_price = TRUE
 	attunement_cost = 5
+	infusable = FALSE
 	var/active_item
 
 /obj/item/rogueweapon/sword/long/vlord/equipped(mob/living/user)

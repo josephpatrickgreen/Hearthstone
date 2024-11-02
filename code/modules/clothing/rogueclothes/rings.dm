@@ -157,7 +157,8 @@
 	sellprice = 666
 	attunement_cost = 5
 	var/active_item
-
+	infusable = FALSE
+	
 /obj/item/clothing/ring/dragon_ring/equipped(mob/living/user)
 	. = ..()
 	if(active_item)
