@@ -81,9 +81,6 @@
 	var/list/areas_entered = list()
 
 	var/list/known_people = list() //contains person, their job, and their voice color
-	
-	var/list/enemies = list() //list of enemies, can kos? once?
-	var/list/hunters = list() //hunted by player, can kos? once?
 
 	var/list/notes = list() //RTD add notes button
 
