@@ -108,13 +108,13 @@
 
 #define GARRISON		(1<<1)
 
-#define GUARDSMAN	(1<<0)
-#define ROYALGUARD	(1<<1)
-#define DUNGEONEER	(1<<2)
-#define GATEMASTER	(1<<3)
-#define BOGGUARD	(1<<4)
-#define BOGMASTER	(1<<5)
-#define SHERIFF		(1<<6)
+//#define GUARDSMAN	(1<<0)
+#define ROYALGUARD	(1<<0)
+#define DUNGEONEER	(1<<1)
+#define GATEMASTER	(1<<2)
+#define BOGGUARD	(1<<3)
+//#define BOGMASTER	(1<<5)
+#define SHERIFF		(1<<4)
 
 #define CHURCHMEN		(1<<2)
 
@@ -169,7 +169,8 @@
 #define PRISONERB	(1<<16)
 #define PRISONERC	(1<<17)
 #define LUNATIC		(1<<18)
-#define MIGRANT (1<<19)
+#define MIGRANT 	(1<<19)
+#define BANDIT		(1<<20)
 
 #define APPRENTICES	(1<<6)
 
@@ -250,7 +251,7 @@
 #define JDO_SHERIFF 8.5
 #define JDO_TOWNGUARD 8.6
 #define JDO_DUNGEONEER 8.7
-#define JDO_BOGMASTER 9
+// #define JDO_BOGMASTER 9
 #define JDO_BOGGUARD 9.1
 
 #define JDO_PRIEST 10
@@ -295,6 +296,7 @@
 #define JDO_DESERT_RIDER 31.2
 #define JDO_VET 31.3
 #define JDO_SEELIE 31.4
+#define JDO_BANDIT 31.5
 
 #define JDO_VAGRANT 33
 #define JDO_VAGABOND 34
@@ -386,11 +388,11 @@
 	/datum/job/roguetown/adventurer,\
 	/datum/job/roguetown/mercenary/desert_rider,\
 	/datum/job/roguetown/mercenary/grenzelhoft,\
-	/datum/job/roguetown/mercenary/seelie
+	/datum/job/roguetown/seelie,\
+	/datum/job/roguetown/bandit
 
 #define GARRISON_ROLES \
 	/datum/job/roguetown/bogguardsman,\
-	/datum/job/roguetown/bogmaster,\
 	/datum/job/roguetown/dungeoneer,\
 	/datum/job/roguetown/gatemaster,\
 	/datum/job/roguetown/manorguard,\
