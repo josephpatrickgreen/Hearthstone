@@ -136,7 +136,14 @@
 		if(name in GLOB.outlawed_players)
 			. += span_userdanger("OUTLAW!")
 
+		if(mind)
+			if(user.mind)
+				if(user.mind.enemies.Find(name))
+					. += span_userdanger("My target!")
 
+				if(user.mind.hunters.Find(name))
+					. += span_userdanger("I'm a dead man!")
+					
 		var/commie_text
 		if(mind)
 			if(mind.special_role == "Bandit")
